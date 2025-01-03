@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      maximum-pool-size: 25
+      minimum-idle: 10
+      pool-name: DatebookHikariCP
+    type: com.zaxxer.hikari.HikariDataSource
+    username: call_center_knowledge
+    password: call_center_knowledge@7itvbkjhg
+    url: jdbc:postgresql://172.26.27.75:3433/call_center?currentSchema=knowledge_base&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+
+  redis:
+    host: 172.26.26.26
+    port: 6379
+    password: Cs123456
+    database: 9
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: cn.zjtele.pubinfo.hotwordservice.entity
+  configuration:
+    cache-enabled: false
+    lazy-loading-enabled: false
+    multiple-result-sets-enabled: true
+    use-generated-keys: true
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'null'
+  global-config:
+    banner: false
+    db-config:
+      schema: knowledge_base
+
+knife4j:
+  enable: true
+
+redis:
+  enabled: true

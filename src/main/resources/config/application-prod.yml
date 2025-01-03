@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    driver-class-name: com.kingbase8.Driver
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      maximum-pool-size: 25
+      minimum-idle: 10
+      pool-name: DatebookHikariCP
+    type: com.zaxxer.hikari.HikariDataSource
+    username: xffzh_wxy
+    password: zj_xffzh_wxy_123
+    url: jdbc:kingbase8://10.23.124.241:54321/zj_xffzh?currentSchema=zj_xffzh&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=true&characterEncoding=UTF-8
+
+  redis:
+    host: 10.23.124.29
+    port: 6379
+    password: xf@996we
+    database: 3
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: cn.zjtele.pubinfo.hotwordservice.entity
+  configuration:
+    cache-enabled: false
+    lazy-loading-enabled: false
+    multiple-result-sets-enabled: true
+    use-generated-keys: true
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'null'
+  global-config:
+    banner: false
+    db-config:
+      schema: zj_xffzh
+
+knife4j:
+  enable: true
+
+redis:
+  enabled: false
