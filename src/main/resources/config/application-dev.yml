@@ -13,10 +13,10 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     username: jjbone
     password: 42454434
-    url: jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=dev&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+    url: jdbc:postgresql://192.168.31.117:5432/bot?currentSchema=dev&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
   data:
     redis:
-      host: 100.124.153.30
+      host: 192.168.31.117
       port: 6379
       password: zhou@42454434
       database: 0
