@@ -28,3 +28,6 @@ shiro:
       url: "/ws/xbot"
   plugin-list:
     - com.ouhaochen.bot.xbot.plugins.ExamplePlugin2
+
+x-bot:
+  supervisors: 549283548

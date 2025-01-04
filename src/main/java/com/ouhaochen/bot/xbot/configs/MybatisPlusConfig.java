@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.ouhaochen.bot.xbot.mapper")
+@MapperScan("com.ouhaochen.bot.xbot.db.mapper")
 public class MybatisPlusConfig {
 
     @Value("${spring.datasource.driver-class-name}")
@@ -32,5 +32,7 @@ public class MybatisPlusConfig {
                 break;
         }
         return interceptor;
+
     }
+
 }

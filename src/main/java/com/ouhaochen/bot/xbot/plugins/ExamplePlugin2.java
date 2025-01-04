@@ -1,15 +1,13 @@
 package com.ouhaochen.bot.xbot.plugins;
 
-import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.core.BotPlugin;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
-import org.springframework.stereotype.Component;
 
-@Shiro
-@Component
+//@Shiro
+//@Component
 public class ExamplePlugin2 extends BotPlugin {
 
     @Override

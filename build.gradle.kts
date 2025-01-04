@@ -38,7 +38,6 @@ repositories {
 dependencies {
     //springboot
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    //implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
@@ -47,7 +46,6 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     //test
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
-    //testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
     //lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -56,12 +54,10 @@ dependencies {
     implementation("com.baomidou:mybatis-plus-spring-boot3-starter:3.5.9")
     implementation("com.baomidou:mybatis-plus-jsqlparser:3.5.9")
     implementation("com.baomidou:mybatis-plus-generator:3.5.9")
-    implementation("org.apache.velocity:velocity-engine-core:2.4.1")
+    implementation("org.freemarker:freemarker:2.3.34")
     implementation("hikari-cp:hikari-cp:3.2.0")
     //hutool
     implementation("org.dromara.hutool:hutool-all:6.0.0-M19")
-    //knife4j
-    //implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.4.0")
     //额外需要的依赖
     //qq-bot-shiro
     implementation("com.mikuac:shiro:2.3.5")
