@@ -1,6 +1,6 @@
 spring:
   datasource:
-    driver-class-name: com.kingbase8.Driver
+    driver-class-name: org.postgresql.Driver
     hikari:
       auto-commit: true
       connection-test-query: SELECT 1
@@ -11,19 +11,19 @@ spring:
       minimum-idle: 10
       pool-name: DatebookHikariCP
     type: com.zaxxer.hikari.HikariDataSource
-    username: xffzh_wxy
-    password: zj_xffzh_wxy_123
-    url: jdbc:kingbase8://10.23.124.241:54321/zj_xffzh?currentSchema=zj_xffzh&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=true&characterEncoding=UTF-8
-
-  redis:
-    host: 10.23.124.29
-    port: 6379
-    password: xf@996we
-    database: 3
+    username: jjbone
+    password: 42454434
+    url: jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=prod&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+  data:
+    redis:
+      host: 100.124.153.30
+      port: 6379
+      password: zhou@42454434
+      database: 1
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
-  type-aliases-package: cn.zjtele.pubinfo.hotwordservice.entity
+  type-aliases-package: com.ouhaochen.bot.xbot.entity
   configuration:
     cache-enabled: false
     lazy-loading-enabled: false
@@ -34,10 +34,10 @@ mybatis-plus:
   global-config:
     banner: false
     db-config:
-      schema: zj_xffzh
+      schema: prod
 
 knife4j:
   enable: true
 
 redis:
-  enabled: false
+  enabled: true

@@ -1,1 +1,16 @@
-spring.application.name=x-bot
+server:
+  port: 8086
+  servlet:
+    context-path: /xbot/apis
+
+spring:
+  application:
+    name: x-bot
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+  config:
+    additional-location: file:./config/
+  profiles:
+    active: dev

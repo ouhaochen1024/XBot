@@ -11,19 +11,19 @@ spring:
       minimum-idle: 10
       pool-name: DatebookHikariCP
     type: com.zaxxer.hikari.HikariDataSource
-    username: call_center_knowledge
-    password: call_center_knowledge@7itvbkjhg
-    url: jdbc:postgresql://172.26.27.75:3433/call_center?currentSchema=knowledge_base&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
-
-  redis:
-    host: 172.26.26.26
-    port: 6379
-    password: Cs123456
-    database: 9
+    username: jjbone
+    password: 42454434
+    url: jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=dev&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+  data:
+    redis:
+      host: 100.124.153.30
+      port: 6379
+      password: zhou@42454434
+      database: 0
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
-  type-aliases-package: cn.zjtele.pubinfo.hotwordservice.entity
+  type-aliases-package: com.ouhaochen.bot.xbot.entity
   configuration:
     cache-enabled: false
     lazy-loading-enabled: false
@@ -34,7 +34,7 @@ mybatis-plus:
   global-config:
     banner: false
     db-config:
-      schema: knowledge_base
+      schema: dev
 
 knife4j:
   enable: true
