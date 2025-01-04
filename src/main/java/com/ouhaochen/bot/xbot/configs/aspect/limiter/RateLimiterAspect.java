@@ -1,8 +1,8 @@
-package com.ouhaochen.bot.xbot.config.aspect.limiter;
+package com.ouhaochen.bot.xbot.configs.aspect.limiter;
 
 
-import com.ouhaochen.bot.xbot.client.RedisTemplateClient;
-import com.ouhaochen.bot.xbot.common.BusinessException;
+import com.ouhaochen.bot.xbot.clients.RedisTemplateClient;
+import com.ouhaochen.bot.xbot.commons.BusinessException;
 import com.ouhaochen.bot.xbot.utils.HttpUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,11 +1,9 @@
 server:
   port: 8086
-  servlet:
-    context-path: /xbot/apis
 
 spring:
   application:
-    name: x-bot
+    name: "x-bot"
   servlet:
     multipart:
       max-file-size: 100MB
@@ -13,16 +11,20 @@ spring:
   config:
     additional-location: file:./config/
   profiles:
-    active: dev
+    active: "dev"
+  task:
+    execution:
+      thread-name-prefix: "x-bot-task-"
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 100
+        keep-alive: 60
 
-#线程池配置
-# 线程池的前缀名称
-spring.task.execution.thread-name-prefix: custom-thread-pool
-# 核心线程池数
-spring.task.execution.pool.core-size: 5
-# 最大线程池数
-spring.task.execution.pool.max-size: 10
-# 任务队列的容量
-spring.task.execution.pool.queue-capacity: 5
-# 非核心线程的存活时间
-spring.task.execution.pool.keep-alive: 60
+shiro:
+  ws:
+    server:
+      enable: true
+      url: "/ws/xbot"
+  plugin-list:
+    - com.ouhaochen.bot.xbot.plugins.ExamplePlugin2

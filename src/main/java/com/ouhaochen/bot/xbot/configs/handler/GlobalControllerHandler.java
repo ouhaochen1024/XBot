@@ -1,7 +1,7 @@
-package com.ouhaochen.bot.xbot.config.handler;
+package com.ouhaochen.bot.xbot.configs.handler;
 
 
-import com.ouhaochen.bot.xbot.common.BusinessException;
+import com.ouhaochen.bot.xbot.commons.BusinessException;
 import com.ouhaochen.bot.xbot.response.Response;
 import com.ouhaochen.bot.xbot.response.ResponseEnum;
 import jakarta.servlet.http.HttpServletRequest;

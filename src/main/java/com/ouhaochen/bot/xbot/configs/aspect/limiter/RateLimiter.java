@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.config.aspect.limiter;
+package com.ouhaochen.bot.xbot.configs.aspect.limiter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

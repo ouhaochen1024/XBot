@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.config;
+package com.ouhaochen.bot.xbot.configs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
     @Value("${server.port}")
     private int serverPort;
 
-    @Value("${server.servlet.context-path}")
+    @Value("${shiro.ws.server.url}")
     private String contextPath;
 
     @Value("${spring.profiles.active}")
@@ -31,8 +31,8 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
         log.info("""
                 
                 ----------------------------------------------------------
-                Application '{}' is running! Access URLs:
-                API Doc:    http://localhost:{}{}/doc.html
+                Application '{}' is running!
+                WS Server:    ws://localhost:{}{}
                 Profile(s): {}
                 ----------------------------------------------------------
                 """, appName, serverPort, contextPath, profiles);

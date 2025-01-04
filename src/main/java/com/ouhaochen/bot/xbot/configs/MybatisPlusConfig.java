@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.config;
+package com.ouhaochen.bot.xbot.configs;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

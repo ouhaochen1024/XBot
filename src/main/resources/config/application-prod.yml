@@ -11,7 +11,7 @@ spring:
       minimum-idle: 10
       pool-name: DatebookHikariCP
     type: com.zaxxer.hikari.HikariDataSource
-    username: jjbone
+    username: ggbond
     password: 42454434
     url: jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=prod&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
   data:

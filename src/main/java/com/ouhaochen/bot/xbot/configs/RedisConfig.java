@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.config;
+package com.ouhaochen.bot.xbot.configs;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;

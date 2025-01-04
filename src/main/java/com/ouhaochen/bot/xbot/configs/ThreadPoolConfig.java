@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.config;
+package com.ouhaochen.bot.xbot.configs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;

@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.common;
+package com.ouhaochen.bot.xbot.commons;
 
 
 import com.ouhaochen.bot.xbot.response.ResponseEnum;

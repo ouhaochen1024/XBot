@@ -1,7 +1,7 @@
-package com.ouhaochen.bot.xbot.client;
+package com.ouhaochen.bot.xbot.clients;
 
 
-import com.ouhaochen.bot.xbot.common.BusinessException;
+import com.ouhaochen.bot.xbot.commons.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;

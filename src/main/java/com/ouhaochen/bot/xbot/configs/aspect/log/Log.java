@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.config.aspect.log;
+package com.ouhaochen.bot.xbot.configs.aspect.log;
 
 import java.lang.annotation.*;
 
