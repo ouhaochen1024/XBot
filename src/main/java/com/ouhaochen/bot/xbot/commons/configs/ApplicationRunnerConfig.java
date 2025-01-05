@@ -7,6 +7,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @Component
@@ -27,14 +29,18 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
     private List<String> profiles;
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(ApplicationArguments args) throws InterruptedException, UnknownHostException {
+        Thread.sleep(800);
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        String ipAddress = inetAddress.getHostAddress();
         log.info("""
                 
                 ----------------------------------------------------------
                 Application '{}' is running!
-                WS Server:    ws://localhost:{}{}
                 Profile(s): {}
+                WS Server:         ws://{}:{}{}
+                WS Server(Local):  ws://localhost:{}{}
                 ----------------------------------------------------------
-                """, appName, serverPort, contextPath, profiles);
+                """, appName, profiles, ipAddress, serverPort, contextPath, serverPort, contextPath);
     }
 }

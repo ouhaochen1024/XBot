@@ -30,4 +30,5 @@ shiro:
 
 x-bot:
   version: "v1.0.0"
+  formatted-version: " (v1.0.0)"
   supervisors: 549283548

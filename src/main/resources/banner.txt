@@ -5,5 +5,5 @@
 \/>  <//\______\\ \ \L\ \/\ \L\ \ \ \_
  /\_/\_\/______/ \ \_,__/\ \____/\ \__\
  \//\/_/          \/___/  \/___/  \/__/
-    :: Spring Boot :: (v3.4.1)
-    :: X-Bot       :: ${x-bot.version}
+    :: Spring Boot :: ${spring-boot.formatted-version}
+    :: X-Bot       :: ${x-bot.formatted-version}
