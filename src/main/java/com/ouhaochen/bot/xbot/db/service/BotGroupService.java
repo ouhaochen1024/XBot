@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BotGroupService extends IService<BotGroupEntity> {
 
+    boolean isGroupManager(Long userId, Long groupId);
 }

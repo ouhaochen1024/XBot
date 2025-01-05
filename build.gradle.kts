@@ -42,8 +42,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation("org.springframework.boot:spring-boot-starter-mail")
-    //validation
-    implementation("jakarta.validation:jakarta.validation-api:3.1.0")
     //test
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
     //lombok
@@ -55,7 +53,7 @@ dependencies {
     implementation("com.baomidou:mybatis-plus-jsqlparser:3.5.9")
     implementation("com.baomidou:mybatis-plus-generator:3.5.9")
     implementation("org.freemarker:freemarker:2.3.34")
-    implementation("hikari-cp:hikari-cp:3.2.0")
+    implementation("com.zaxxer:HikariCP:6.2.1")
     //hutool
     implementation("org.dromara.hutool:hutool-all:6.0.0-M19")
     //额外需要的依赖

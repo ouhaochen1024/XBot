@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 @Data
+@EqualsAndHashCode(callSuper = true)
 public abstract class BaseEntity<T extends Model<T>> extends Model<T> implements Serializable {
 
     @Serial

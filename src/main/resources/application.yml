@@ -27,7 +27,7 @@ shiro:
       enable: true
       url: "/ws/xbot"
   plugin-list:
-    - com.ouhaochen.bot.xbot.plugins.ExamplePlugin2
 
 x-bot:
+  version: "1.0"
   supervisors: 549283548
