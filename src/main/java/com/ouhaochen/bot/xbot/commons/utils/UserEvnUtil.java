@@ -7,16 +7,16 @@ public final class UserEvnUtil {
     private UserEvnUtil() {
     }
     public static Long getBotId() {
-        return ThreadLocalUserInfo.getCurrentUserInfo().getBotId();
+        return null == ThreadLocalUserInfo.getCurrentUserInfo().getBotId() ? 0L : ThreadLocalUserInfo.getCurrentUserInfo().getBotId();
     }
     public static Long getUserId() {
-       return ThreadLocalUserInfo.getCurrentUserInfo().getUserId();
+       return null == ThreadLocalUserInfo.getCurrentUserInfo().getUserId() ? 0L : ThreadLocalUserInfo.getCurrentUserInfo().getUserId();
     }
     public static String getUserNickName(String userId) {
-        return ThreadLocalUserInfo.getCurrentUserInfo().getUserNickName();
+        return null == ThreadLocalUserInfo.getCurrentUserInfo().getUserNickName() ? "" : ThreadLocalUserInfo.getCurrentUserInfo().getUserNickName();
     }
     public static Long getGroupId() {
-        return ThreadLocalUserInfo.getCurrentUserInfo().getGroupId();
+        return null == ThreadLocalUserInfo.getCurrentUserInfo().getGroupId() ? 0L : ThreadLocalUserInfo.getCurrentUserInfo().getGroupId();
     }
 
 }
