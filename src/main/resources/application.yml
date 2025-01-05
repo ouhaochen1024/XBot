@@ -29,5 +29,5 @@ shiro:
   plugin-list:
 
 x-bot:
-  version: "1.0"
+  version: "v1.0.0"
   supervisors: 549283548
