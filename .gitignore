@@ -40,4 +40,4 @@ out/
 *.log
 
 ### github ###
-.github
+.github/workflows/
