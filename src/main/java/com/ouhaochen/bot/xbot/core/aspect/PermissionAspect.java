@@ -1,15 +1,13 @@
 package com.ouhaochen.bot.xbot.core.aspect;
 
 
+import com.mikuac.shiro.dto.event.Event;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
+import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
 import com.ouhaochen.bot.xbot.commons.security.CurrentUserInfo;
 import com.ouhaochen.bot.xbot.commons.security.ThreadLocalUserInfo;
-import com.ouhaochen.bot.xbot.core.adapter.AnyMessageAdapter;
-import com.ouhaochen.bot.xbot.core.adapter.GroupMessageAdapter;
-import com.ouhaochen.bot.xbot.core.adapter.MessageAdapter;
-import com.ouhaochen.bot.xbot.core.adapter.PrivateMessageAdapter;
+import com.ouhaochen.bot.xbot.core.adapter.*;
 import com.ouhaochen.bot.xbot.core.configs.PluginConfig;
 import com.ouhaochen.bot.xbot.db.service.BotGroupService;
 import lombok.RequiredArgsConstructor;
@@ -30,27 +28,29 @@ public class PermissionAspect {
     @Around(value = "@annotation(permission)", argNames = "point,permission")
     public Object doBefore(ProceedingJoinPoint point, Permission permission) throws Throwable {
         Object[] args = point.getArgs();
-        MessageEvent event = (MessageEvent) args[1];
-        MessageAdapter messageAdapter;
+        Event event = (Event) args[1];
+        EventAdapter adapter;
         if (event instanceof GroupMessageEvent) {
-            messageAdapter = new GroupMessageAdapter((GroupMessageEvent) event);
+            adapter = new GroupMessageEventAdapter((GroupMessageEvent) event);
         } else if (event instanceof PrivateMessageEvent) {
-            messageAdapter = new PrivateMessageAdapter((PrivateMessageEvent) event);
+            adapter = new PrivateMessageEventAdapter((PrivateMessageEvent) event);
+        } else if (event instanceof GroupAddRequestEvent) {
+            adapter = new GroupAddRequestEventAdapter((GroupAddRequestEvent) event);
         } else {
-            messageAdapter = new AnyMessageAdapter(event);
+            return point.proceed();
         }
-        if (permission.checkUser() && !PluginConfig.SUPERVISORS.contains(messageAdapter.getUserId())) {
+        if (permission.checkUser() && !PluginConfig.SUPERVISORS.contains(adapter.getUserId())) {
             return null;
         }
-        if (permission.checkGroup() && !botGroupService.isGroupManager(messageAdapter.getBotId(), messageAdapter.getGroupId())) {
+        if (permission.checkGroup() && !botGroupService.isGroupManager(adapter.getBotId(), adapter.getGroupId())) {
             return null;
         }
         //将用户信息存入当前线程
         CurrentUserInfo currentUserInfo = new CurrentUserInfo()
-                .setBotId(messageAdapter.getBotId())
-                .setUserId(messageAdapter.getUserId())
-                .setGroupId(messageAdapter.getGroupId())
-                .setUserNickName(messageAdapter.getUserNickName());
+                .setBotId(adapter.getBotId())
+                .setUserId(adapter.getUserId())
+                .setGroupId(adapter.getGroupId())
+                .setUserNickName(adapter.getUserNickName());
         ThreadLocalUserInfo.setCurrentUserInfo(currentUserInfo);
         return point.proceed();
     }

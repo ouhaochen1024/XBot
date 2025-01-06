@@ -2,10 +2,10 @@ package com.ouhaochen.bot.xbot.core.adapter;
 
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 
-public class GroupMessageAdapter implements MessageAdapter {
+public class GroupMessageEventAdapter implements EventAdapter {
     private final GroupMessageEvent event;
 
-    public GroupMessageAdapter(GroupMessageEvent event) {
+    public GroupMessageEventAdapter(GroupMessageEvent event) {
         this.event = event;
     }
 

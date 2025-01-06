@@ -13,13 +13,13 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     username: ggbond
     password: 42454434
-    url: jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=prod&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+    url: jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=dev&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
   data:
     redis:
       host: 100.124.153.30
       port: 6379
       password: zhou@42454434
-      database: 1
+      database: 0
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
@@ -34,7 +34,7 @@ mybatis-plus:
   global-config:
     banner: false
     db-config:
-      schema: prod
+      schema: dev
 
 knife4j:
   enable: true

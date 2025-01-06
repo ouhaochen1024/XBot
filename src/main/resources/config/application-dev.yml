@@ -23,7 +23,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
-  type-aliases-package: com.ouhaochen.bot.xbot.entity
+  type-aliases-package: com.ouhaochen.bot.xbot.db.entity
   configuration:
     cache-enabled: false
     lazy-loading-enabled: false

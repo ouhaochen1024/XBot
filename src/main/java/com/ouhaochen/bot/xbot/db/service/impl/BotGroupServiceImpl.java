@@ -3,7 +3,7 @@ package com.ouhaochen.bot.xbot.db.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ouhaochen.bot.xbot.commons.enums.DelFlagEnum;
-import com.ouhaochen.bot.xbot.db.domain.entity.BotGroupEntity;
+import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import com.ouhaochen.bot.xbot.db.mapper.BotGroupMapper;
 import com.ouhaochen.bot.xbot.db.service.BotGroupService;
 import org.springframework.stereotype.Service;

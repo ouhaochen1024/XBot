@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.db.domain.entity;
+package com.ouhaochen.bot.xbot.db.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
