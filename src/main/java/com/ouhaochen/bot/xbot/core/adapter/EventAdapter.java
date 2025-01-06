@@ -1,6 +1,6 @@
 package com.ouhaochen.bot.xbot.core.adapter;
 
-public interface MessageAdapter {
+public interface EventAdapter {
     Long getBotId();
     Long getUserId();
     String getUserNickName();

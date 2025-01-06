@@ -2,10 +2,10 @@ package com.ouhaochen.bot.xbot.core.adapter;
 
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 
-public class PrivateMessageAdapter implements MessageAdapter {
+public class PrivateMessageEventAdapter implements EventAdapter {
     private final PrivateMessageEvent event;
 
-    public PrivateMessageAdapter(PrivateMessageEvent event) {
+    public PrivateMessageEventAdapter(PrivateMessageEvent event) {
         this.event = event;
     }
 

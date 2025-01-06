@@ -11,7 +11,7 @@ spring:
   config:
     additional-location: file:./config/
   profiles:
-    active: "dev"
+    active: "dev2"
   task:
     execution:
       thread-name-prefix: "x-bot-task-"

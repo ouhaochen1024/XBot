@@ -30,7 +30,6 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws InterruptedException, UnknownHostException {
-        Thread.sleep(800);
         InetAddress inetAddress = InetAddress.getLocalHost();
         String ipAddress = inetAddress.getHostAddress();
         log.info("""

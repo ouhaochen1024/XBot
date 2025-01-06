@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        metaObject.setValue("createTime", LocalDateTime.now());
-        metaObject.setValue("updateTime", LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        metaObject.setValue("createTime", now);
+        metaObject.setValue("updateTime", now);
         metaObject.setValue("createBy", UserEvnUtil.getUserId());
         metaObject.setValue("updateBy", UserEvnUtil.getUserId());
         metaObject.setValue("delFlag", DelFlagEnum.NOT_DELETED.getCode());
@@ -21,7 +22,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        metaObject.setValue("updateTime", LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        metaObject.setValue("updateTime", now);
         metaObject.setValue("updateBy", UserEvnUtil.getUserId());
     }
 }

@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.generator.config.converts.PostgreSqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
-import com.ouhaochen.bot.xbot.db.domain.entity.BaseEntity;
+import com.ouhaochen.bot.xbot.db.entity.BaseEntity;
 import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.util.Collections;

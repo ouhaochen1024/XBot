@@ -11,8 +11,13 @@ CREATE TABLE "dev"."t_bot_group" (
 )
 ;
 
-ALTER TABLE "dev"."t_bot_group"
-    OWNER TO "ggbond";
+-- ALTER TABLE "dev"."t_bot_group"
+--     OWNER TO "ggbond";
+
+CREATE INDEX "t_bot_group_group_id_bot_id_idx" ON "dev"."t_bot_group" USING btree (
+                                                                                   "group_id" "pg_catalog"."int8_ops" ASC NULLS LAST,
+                                                                                   "bot_id" "pg_catalog"."int8_ops" ASC NULLS LAST
+    );
 
 COMMENT ON COLUMN "dev"."t_bot_group"."id" IS 'id';
 
@@ -27,5 +32,7 @@ COMMENT ON COLUMN "dev"."t_bot_group"."update_time" IS '更新时间';
 COMMENT ON COLUMN "dev"."t_bot_group"."create_by" IS '创建者';
 
 COMMENT ON COLUMN "dev"."t_bot_group"."update_by" IS '更新者';
+
+COMMENT ON COLUMN "dev"."t_bot_group"."del_flag" IS '删除标识';
 
 COMMENT ON TABLE "dev"."t_bot_group" IS '机器人群权限表';

@@ -1,12 +1,13 @@
 package com.ouhaochen.bot.xbot.core.adapter;
 
+import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 
-public class AnyMessageAdapter implements MessageAdapter {
-    private final MessageEvent event;
+public class AnyMessageEventAdapter implements EventAdapter {
+    private final AnyMessageEvent event;
 
-    public AnyMessageAdapter(MessageEvent event) {
+    public AnyMessageEventAdapter(AnyMessageEvent event) {
         this.event = event;
     }
 
@@ -27,8 +28,8 @@ public class AnyMessageAdapter implements MessageAdapter {
 
     @Override
     public Long getGroupId() {
-        if (event instanceof GroupMessageEvent) {
-            return ((GroupMessageEvent) event).getGroupId();
+        if (null != event.getGroupId()) {
+            return event.getGroupId();
         }
         return 0L;
     }
