@@ -67,3 +67,11 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        token: ${{ secrets.ouhaochen }}
+        body_path: ./CHANGELOG.md
+        files: |
+            ./build/**
+            ./CHANGELOG.md
