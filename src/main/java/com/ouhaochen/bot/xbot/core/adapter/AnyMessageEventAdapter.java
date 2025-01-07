@@ -1,8 +1,6 @@
 package com.ouhaochen.bot.xbot.core.adapter;
 
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 
 public class AnyMessageEventAdapter implements EventAdapter {
     private final AnyMessageEvent event;
