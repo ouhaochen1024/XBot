@@ -1,7 +1,7 @@
 package com.ouhaochen.bot.xbot.db.service;
 
-import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 
 /**
  * <p>

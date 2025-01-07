@@ -36,8 +36,5 @@ mybatis-plus:
     db-config:
       schema: dev
 
-knife4j:
-  enable: true
-
 redis:
-  enabled: true
+  enabled: false

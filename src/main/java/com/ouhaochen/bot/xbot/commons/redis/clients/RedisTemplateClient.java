@@ -10,7 +10,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import java.lang.RuntimeException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 

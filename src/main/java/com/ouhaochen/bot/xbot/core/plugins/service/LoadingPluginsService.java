@@ -5,24 +5,28 @@ import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.constants.XBotRedisConstantKey;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LoadingPluginsService {
 
+    @Value("${redis.enabled}")
+    private boolean isRedisEnabled;
     private final RedisTemplateClient redisTemplateClient;
 
     @PostConstruct
     public void loadingPlugins() {
+        if (!isRedisEnabled) {
+            return;
+        }
         redisTemplateClient.delete(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY);
         Set<String> pluginClassNames = loadPluginClassNames();
         //存入缓存

@@ -1,7 +1,7 @@
 package com.ouhaochen.bot.xbot.db.mapper;
 
-import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 
 /**
  * <p>
