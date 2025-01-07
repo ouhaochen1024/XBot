@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.aspect;
+package com.ouhaochen.bot.xbot.core.aspect.permission;
 
 import java.lang.annotation.*;
 

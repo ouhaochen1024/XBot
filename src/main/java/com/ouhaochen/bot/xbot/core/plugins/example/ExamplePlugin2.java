@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.plugins;
+package com.ouhaochen.bot.xbot.core.plugins.example;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;

@@ -11,4 +11,5 @@ public class CurrentUserInfo {
     private Long userId;
     private String userNickName;
     private Long groupId;
+    private String currentPluginName;
 }

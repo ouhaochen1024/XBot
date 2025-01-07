@@ -6,4 +6,4 @@
  /\_/\_\/______/ \ \_,__/\ \____/\ \__\
  \//\/_/          \/___/  \/___/  \/__/
     :: Spring Boot :: ${spring-boot.formatted-version}
-    :: X-Bot       :: ${x-bot.formatted-version}
+    :: XBot       :: ${xbot.formatted-version}

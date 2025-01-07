@@ -9,11 +9,11 @@ import java.util.List;
 @Configuration
 public class PluginConfig implements InitializingBean {
 
-    @Value("${x-bot.version}")
+    @Value("${xbot.version}")
     private String version;
-    @Value("${x-bot.formatted-version}")
+    @Value("${xbot.formatted-version}")
     private String formattedVersion;
-    @Value("${x-bot.supervisors}")
+    @Value("${xbot.supervisors}")
     private List<Long> supervisors;
 
     public static String VERSION;
