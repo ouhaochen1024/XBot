@@ -1,34 +1,48 @@
 server:
   port: 8086
+  servlet:
+    context-path: '/xbot'
 
 spring:
   application:
-    name: "xbot"
+    name: xbot
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 1000MB
+      max-file-size: '100MB'
+      max-request-size: '1000MB'
   config:
     additional-location: file:./config/
   profiles:
-    active: "dev2"
+    active: 'dev'
   task:
     execution:
-      thread-name-prefix: "xbot-task-"
+      thread-name-prefix: 'xbot-task-'
       pool:
         core-size: 5
         max-size: 10
         queue-capacity: 100
         keep-alive: 60
 
+knife4j:
+  enable: false
+
 shiro:
   ws:
     server:
       enable: true
-      url: "/ws/xbot"
+      url: '/ws'
   plugin-list:
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+
 xbot:
-  version: "v1.0.0"
-  formatted-version: " (v1.0.0)"
+  version: 'v1.0.0'
+  formatted-version: ' (v1.0.0)'
   supervisors: 549283548
