@@ -33,6 +33,15 @@ shiro:
       url: '/ws'
   plugin-list:
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+
 xbot:
   version: 'v1.0.0'
   formatted-version: ' (v1.0.0)'
