@@ -3,7 +3,7 @@ package com.ouhaochen.bot.xbot.commons.aspect.limiter;
 
 import com.ouhaochen.bot.xbot.commons.exception.BusinessException;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
-import com.ouhaochen.bot.xbot.commons.utils.HttpUtil;
+import com.ouhaochen.bot.xbot.commons.utils.IPUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +67,7 @@ public class RateLimiterAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
         HttpServletRequest request = attributes.getRequest();
-        sb.append(HttpUtil.getRealIpAddress(request));
+        sb.append(IPUtil.getRealIpAddress(request));
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
         Class<?> targetClass = method.getDeclaringClass();
