@@ -1,175 +1,193 @@
-package com.ouhaochen.bot.xbot.commons.aspect.log;
-
-
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-
-
-/**
- * 登录自定义表单其他参数
- */
-@Aspect
-@Component
-@RequiredArgsConstructor
-public class LogAspect {
-
-    private final Environment env;
+//package com.spacex.qianhui.config.aspect;
 //
+//import cn.hutool.core.util.StrUtil;
+//import com.alibaba.fastjson.JSON;
+//import com.alibaba.fastjson.JSONObject;
+//import com.spacex.qianhui.config.annotions.Record;
+//import com.spacex.qianhui.constant.Topics;
+//import com.spacex.qianhui.model.ApiLogModel;
+//import com.spacex.qianhui.utils.IdUtil;
+//import com.spacex.qianhui.utils.IpUtil;
+//import com.spacex.qianhui.utils.JsonUtil;
+//import com.spacex.qianhui.utils.UserUtils;
+//import io.swagger.annotations.ApiOperation;
+//import lombok.extern.slf4j.Slf4j;
+//import org.aspectj.lang.JoinPoint;
+//import org.aspectj.lang.ProceedingJoinPoint;
+//import org.aspectj.lang.annotation.Around;
+//import org.aspectj.lang.annotation.Aspect;
+//import org.aspectj.lang.annotation.Pointcut;
+//import org.aspectj.lang.reflect.MethodSignature;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.stereotype.Component;
+//import org.springframework.validation.BindingResult;
+//import org.springframework.web.context.request.RequestAttributes;
+//import org.springframework.web.context.request.RequestContextHolder;
+//import org.springframework.web.multipart.MultipartFile;
+//
+//import javax.servlet.ServletRequest;
+//import javax.servlet.ServletResponse;
+//import javax.servlet.http.HttpServletRequest;
+//import java.lang.reflect.Method;
+//import java.time.LocalDateTime;
+//import java.util.Arrays;
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//@Component
+//@Aspect
+//@Slf4j
+//public class ApiLogAspect {
+//
+//    @Value("${spring.profiles.active}")
+//    private String active;
 //    @Autowired
-//    private ExceptionLogService exceptionLogService;
-//    @Autowired
-//    private OperateationLogService OperateationLogService;
-
-    /**
-     * 设置操作日志切入点 记录操作日志 在注解的位置切入代码
-     */
-//    @Pointcut("@annotation(com.oscar.app.config.log.Log)")
-//    public void logPointCut() {
+//    private KafkaTemplate<String, Object> kafkaTemplate;
+//
+//    @Pointcut("execution(* com.xxx.controller..*.*(..))")
+//    public void controller() {
 //    }
 //
-//    /**
-//    * 设置操作异常切入点记录异常日志 扫描所有controller包下操作
-//    */
-//    @Pointcut("execution(* com.oscar.app.controller..*.*(..))")
-//    public void exceptionLogPointCut() {
-//    }
-
-    /**
-     * 正常返回通知，拦截用户操作日志，连接点正常执行完成后执行， 如果连接点抛出异常，则不会执行
-     *
-     * @param joinPoint 切入点
-     * @param keys      返回结果
-     */
-//    @AfterReturning(value = "logPointCut()", returning = "keys")
-//    public void saveOperateLog(JoinPoint joinPoint, Object keys) throws Exception {
-//        // 获取RequestAttributes
+//    @Around("controller()")
+//    public Object around(ProceedingJoinPoint point) throws Throwable {
+//        if (!("prod").equals(active)) return point.proceed();
+//        //获取请求的方法
+//        MethodSignature signature = (MethodSignature) point.getSignature();
+//        Method method = signature.getMethod();
+//        Record need2Record = method.getAnnotation(Record.class);
+//        if (null != need2Record && !need2Record.need()) return point.proceed();
+//        int code = 200;
+//        String status = "success";
+//        String result = "";
+//        Long userId = UserUtils.getUserId();
+//        String username = UserUtils.getUsername();
+//        if ("shuju9527".equals(username) || "17857501781".equals(username) || "13324512862".equals(username))
+//            return point.proceed();
+//        String nickname = UserUtils.getNickname();
+//        Long companyId = UserUtils.getCompanyId();
+//        LocalDateTime beginTime = LocalDateTime.now();
 //        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-//        HttpServletRequest request = (HttpServletRequest) requestAttributes
-//                           .resolveReference(RequestAttributes.REFERENCE_REQUEST);
-//        OperateationLog Operatelog = new OperateationLog();
-//            // 从切面织入点处通过反射机制获取织入点处的方法
-//            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-//            Method method = signature.getMethod();// 获取切入点所在的方法
-//            OperateLog opLog = method.getAnnotation(OperateLog.class);//获取操作
-//            String OperateDesc = null;
-//            if (opLog !=null){
-//                String OperateModul = opLog.OperateModul();
-//                String OperateType = opLog.OperateType();
-//                OperateDesc = opLog.OperateDesc();
-//                Operatelog.setOperateModul(OperateModul); // 操作模块
-//                Operatelog.setOperateType(OperateType); // 操作类型
-//                Operatelog.setOperateDesc(OperateDesc); // 操作描述
-//            }
-//            String urlStr = request.getRequestURL().toString();
-//            // 获取请求的类名
-//            String className = joinPoint.getTarget().getClass().getName();
-//            String methodName = method.getName();// 获取请求的方法名
-//            methodName = className + "." + methodName;
-//            Operatelog.setOperateMethod(methodName); // 请求方法
-//            Operatelog.setOperateRequParam(getReqestParams(request,joinPoint));
-//            Operatelog.setOperateRespParam(JSON.toJSONString(keys));
-////            Operatelog.setOperateUserId(user.getSysId());
-//            if (!Objects.equals(OperateDesc, "登录") && !Objects.equals(OperateDesc, "退出登录")){
-//                UserToken userToken = TokenFactory.validateToken(request);
-//                Operatelog.setOperateUserName(userToken.getUsername());
-//            }
-//            Operatelog.setOperateIp(HttpUtils.getRealIpAddress(request));
-//            Operatelog.setOperateUrl(request.getRequestURI());
-//            Operatelog.setOperateVer(env.getPrOperatety("platform.OperateVer"));
-//            Operatelog.setBasePath(StrUtil.removeSuffix(urlStr, URLUtil.url(urlStr).getPath()));
-//            OperateationLogService.save(Operatelog);
-//    }
-    /**
-     * 异常返回通知，用于拦截异常日志信息 连接点抛出异常后执行
-     *
-     * @param joinPoint 切入点
-     * @param e         异常信息
-     */
-//    @AfterThrowing(pointcut = "exceptionLogPointCut()", throwing = "e")
-//    public void saveExceptionLog(JoinPoint joinPoint, Throwable e) {
-//        // 获取RequestAttributes
-//        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-//        // 从获取RequestAttributes中获取HttpServletRequest的信息
-//        HttpServletRequest request = (HttpServletRequest) requestAttributes
-//                .resolveReference(RequestAttributes.REFERENCE_REQUEST);
-//
-//        ExceptionLog excepLog = new ExceptionLog();
+//        assert requestAttributes != null;
+//        HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
+//        String requestParam = getMethodArgs(point);
+//        String ip = IpUtil.getRealIpAddress(request);
+//        assert request != null;
+//        String url = request.getRequestURI();
+//        String ua = request.getHeader("User-Agent");
+//        String apiOperation = method.getAnnotation(ApiOperation.class).value();
+//        if (StrUtil.isNotBlank(apiOperation) && apiOperation.equals("用户-登录")) return point.proceed();
+//        String className = point.getTarget().getClass().getName();
+//        String methodName = method.getName();
+//        String methodStr = className + "." + methodName;
 //        try {
-//            // 从切面织入点处通过反射机制获取织入点处的方法
-//            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-//            // 获取切入点所在的方法
-//            Method method = signature.getMethod();
-//            String urlStr = request.getRequestURL().toString();
-//            String className = joinPoint.getTarget().getClass().getName();
-//            String methodName = method.getName();
-//            methodName = className + "." + methodName;
-////            Map<String, String> rtnMap = converMap(request.getParameterMap());
-////            String params = JSON.toJSONString(rtnMap);
-//            excepLog.setExcRequParam(getReqestParams(request,joinPoint));
-////            excepLog.setExcRequParam(params);
-//            excepLog.setOperateMethod(methodName);
-//            excepLog.setExcName(e.getClass().getName());
-//            excepLog.setExcMessage(stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace()));
-////            SystemUser user = SesionUtils.getSysUserSession();
-////            excepLog.setOperateUserId(user.getSysId());
-////            excepLog.setOperateUserName(user.getUsername());
-//            excepLog.setOperateUrl(request.getRequestURI());
-//            excepLog.setOperateIp(HttpUtils.getRealIpAddress(request));
-//            excepLog.setOperateVer(env.getPrOperatety("platform.OperateVer"));
-//            excepLog.setBasePath(StrUtil.removeSuffix(urlStr, URLUtil.url(urlStr).getPath()));
-//            exceptionLogService.save(excepLog);
-//        } catch (Exception e2) {
-//            e2.printStackTrace();
+//            //放行请求的主进程并拿到返回值
+//            Object obj = point.proceed();
+//            if (obj != null) {
+//                Map<String, String> resultMap = handlerResult(obj);
+//                code = Integer.parseInt(resultMap.get("code"));
+//                result = resultMap.get("result");
+//            }
+//            status = "操作成功";
+//            return obj;
+//        } catch (Exception e) {
+//            result = e.getMessage();
+//            status = "操作失败";
+//            throw e;
+//        } finally {
+//            saveLog(beginTime, LocalDateTime.now(), apiOperation, userId, username, nickname, companyId, ip,
+//                    methodStr, url, ua, requestParam, result, code, status);
 //        }
 //    }
-
-
-    /**
-     * @Description: 获取请求参数
-     * @author: scott
-     * @date: 2020/4/16 0:10
-     * @param request:  request
-     * @param joinPoint:  joinPoint
-     * @Return: java.lang.String
-     */
-    private String getRequestParams(HttpServletRequest request, JoinPoint joinPoint) {
-        String httpMethod = request.getMethod();
-        return "";
-    }
-
-    /**
-     * 转换request 请求参数
-     *
-     * @param paramMap request获取的参数数组
-     */
-     public Map<String, String> converMap(Map<String, String[]> paramMap) {
-        Map<String, String> rtnMap = new HashMap<String, String>();
-        for(String key : paramMap.keySet()) {
-                 rtnMap.put(key, paramMap.get(key)[0]);
-            }
-        return rtnMap;
-     }
-
-    /**
-     * 转换异常信息为字符串
-     *
-     * @param exceptionName    异常名称
-     * @param exceptionMessage 异常信息
-     * @param elements         堆栈信息
-     */
-     public String stackTraceToString(String exceptionName, String exceptionMessage, StackTraceElement[] elements) {
-        StringBuilder strbuff = new StringBuilder();
-        for (StackTraceElement stet : elements) {
-            strbuff.append(stet).append("\n");
-            }
-         return exceptionName + ":" + exceptionMessage + "\n\t" + strbuff;
-     }
-}
-
+//
+//    private void saveLog(LocalDateTime beginTime, LocalDateTime now, String apiOperation, Long userId,
+//                         String username, String nickname, Long companyId, String ip, String methodStr, String url, String ua,
+//                         String requestParam, String result, Integer code, String status) {
+//        ApiLogModel model = new ApiLogModel()
+//                .setId(IdUtil.nextId())
+//                .setBeginTime(beginTime)
+//                .setEndTime(now)
+//                .setUserId(userId)
+//                .setUsername(username)
+//                .setNickname(nickname)
+//                .setCompanyId(companyId)
+//                .setApiOperation(apiOperation)
+//                .setIp(ip)
+//                .setMethod(methodStr)
+//                .setUrl(url)
+//                .setUa(ua)
+//                .setRequestParam(requestParam)
+//                .setResult(result)
+//                .setCode(code)
+//                .setStatus(status);
+//
+//        try {
+//            kafkaTemplate.send(Topics.QH_APP_LOG_API, model);
+//        } catch (Exception e) {
+//            log.error("保存接口请求日志时出错", e);
+//        }
+//    }
+//
+//    private String getMethodArgs(JoinPoint point) {
+//        Object[] args = point.getArgs();
+//        if (args == null || args.length == 0) {
+//            return "";
+//        }
+//        try {
+//            Map<String, Object> params = new HashMap<>();
+//            String[] parameterNames = ((MethodSignature) point.getSignature()).getParameterNames();
+//            for (int i = 0; i < parameterNames.length; i++) {
+//                Object arg = args[i];
+//                // 过滤不能转换成JSON的参数
+//                if ((arg instanceof BindingResult || arg instanceof ServletRequest) || (arg instanceof ServletResponse)) {
+//                    continue;
+//                } else if ((arg instanceof MultipartFile)) {
+//                    arg = arg.toString();
+//                }
+//                params.put(parameterNames[i], arg);
+//            }
+//            String resultStr = JSONObject.toJSONString(params);
+//            return JsonUtil.filterEmptyValues(JSON.parseObject(resultStr)).toJSONString();
+//        } catch (Exception e) {
+//            log.error("接口出入参日志打印切面处理请求参数异常", e);
+//        }
+//        return Arrays.toString(args);
+//    }
+//
+//
+//    /**
+//     * 返回结果简单处理
+//     * 1）把返回结果转成String，方便输出。
+//     * 2）返回结果太长则截取（最多500个字符），方便展示。
+//     *
+//     * @param result 原方法调用的返回结果
+//     * @return 处理后的
+//     */
+//    private Map<String, String> handlerResult(Object result) {
+//        Map<String, String> map = new HashMap<>();
+//        if (result == null) {
+//            return null;
+//        }
+//        String resultStr;
+//        try {
+//            if (result instanceof String) {
+//                resultStr = (String) result;
+//            } else {
+//                // 如果返回结果非String类型，转换成JSON格式的字符串
+//                resultStr = JSONObject.toJSONString(result);
+//                JSONObject jsonObject = JSON.parseObject(resultStr);
+//                map.put("code", jsonObject.get("code").toString());
+//            }
+//            if (resultStr.length() > 500) {
+//                resultStr = resultStr.substring(0, 500);
+//            }
+//        } catch (Exception e) {
+//            resultStr = result.toString();
+//            map.put("code", "9527");
+//            log.error("接口出入参日志打印切面处理返回参数异常", e);
+//        }
+//        map.put("result", resultStr);
+//        return map;
+//    }
+//}

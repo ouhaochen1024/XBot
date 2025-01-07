@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.aspect;
+package com.ouhaochen.bot.xbot.core.aspect.permission;
 
 
 import com.mikuac.shiro.dto.event.Event;
@@ -45,12 +45,17 @@ public class PermissionAspect {
         if (permission.checkGroup() && !botGroupService.isGroupManager(adapter.getBotId(), adapter.getGroupId())) {
             return null;
         }
-        //将用户信息存入当前线程
+        // 插件名称
+        String className = point.getTarget().getClass().getName();
+        String[] split = className.split("\\.");
+        String pluginName = split[split.length - 1];
+        // 将用户信息存入当前线程
         CurrentUserInfo currentUserInfo = new CurrentUserInfo()
                 .setBotId(adapter.getBotId())
                 .setUserId(adapter.getUserId())
                 .setGroupId(adapter.getGroupId())
-                .setUserNickName(adapter.getUserNickName());
+                .setUserNickName(adapter.getUserNickName())
+                .setCurrentPluginName(pluginName);
         ThreadLocalUserInfo.setCurrentUserInfo(currentUserInfo);
         return point.proceed();
     }

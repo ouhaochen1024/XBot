@@ -11,7 +11,7 @@ import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
 import com.ouhaochen.bot.xbot.commons.enums.DelFlagEnum;
-import com.ouhaochen.bot.xbot.core.aspect.Permission;
+import com.ouhaochen.bot.xbot.core.aspect.permission.Permission;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import com.ouhaochen.bot.xbot.db.service.BotGroupService;

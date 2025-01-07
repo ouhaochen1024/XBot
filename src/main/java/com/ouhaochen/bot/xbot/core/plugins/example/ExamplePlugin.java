@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.plugins;
+package com.ouhaochen.bot.xbot.core.plugins.example;
 
 import com.mikuac.shiro.annotation.AnyMessageHandler;
 import com.mikuac.shiro.annotation.GroupMessageHandler;

@@ -29,9 +29,13 @@ public class ApplicationRunnerConfig implements ApplicationRunner {
     private List<String> profiles;
 
     @Override
-    public void run(ApplicationArguments args) throws InterruptedException, UnknownHostException {
-        InetAddress inetAddress = InetAddress.getLocalHost();
-        String ipAddress = inetAddress.getHostAddress();
+    public void run(ApplicationArguments args) {
+        String ipAddress = "127.0.0.1";
+        try {
+            ipAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
+            log.error("获取本机IP地址失败", e);
+        }
         log.info("""
                 
                 ----------------------------------------------------------

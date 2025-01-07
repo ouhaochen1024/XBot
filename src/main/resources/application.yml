@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: "x-bot"
+    name: "xbot"
   servlet:
     multipart:
       max-file-size: 100MB
@@ -14,7 +14,7 @@ spring:
     active: "dev2"
   task:
     execution:
-      thread-name-prefix: "x-bot-task-"
+      thread-name-prefix: "xbot-task-"
       pool:
         core-size: 5
         max-size: 10
@@ -28,7 +28,7 @@ shiro:
       url: "/ws/xbot"
   plugin-list:
 
-x-bot:
+xbot:
   version: "v1.0.0"
   formatted-version: " (v1.0.0)"
   supervisors: 549283548

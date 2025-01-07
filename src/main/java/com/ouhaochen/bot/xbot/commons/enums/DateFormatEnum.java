@@ -5,6 +5,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum DateFormatEnum {
+    /**
+     * 日期格式枚举
+     */
     NORM_YEAR("yyyy"),
     NORM_ONLY_MONTH("MM"),
     NORM_ONLY_DAY("dd"),

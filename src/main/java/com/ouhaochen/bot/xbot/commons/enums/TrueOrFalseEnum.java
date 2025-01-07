@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum DelFlagEnum {
+public enum TrueOrFalseEnum {
     /**
-     * 删除标记枚举
+     *  真假枚举
      */
-    NOT_DELETED(0, "未删除"),
-    DELETED(1, "已删除");
+    FALSE(0, "false"),
+    TRUE(1, "true");
 
     private final Integer code;
     private final String description;
