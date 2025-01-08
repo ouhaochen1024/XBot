@@ -4,8 +4,8 @@ import com.mikuac.shiro.annotation.GroupAddRequestHandler;
 import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
-import com.ouhaochen.bot.xbot.core.aspect.permission.Permission;
-import com.ouhaochen.bot.xbot.db.service.BotGroupService;
+import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
+import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GroupManagePlugin {
 
-    private final BotGroupService botGroupService;
+    private final BotGroupDao botGroupDao;
 
     @Permission(checkUser = false)
     @GroupAddRequestHandler
     public void handleAddGroup(Bot bot, GroupAddRequestEvent event){
         while (true) {
-            botGroupService.isGroupManager(event.getUserId(), event.getGroupId());
+            botGroupDao.isGroupManager(event.getUserId(), event.getGroupId());
         }
     }
 

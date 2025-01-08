@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.configs;
+package com.ouhaochen.bot.xbot.core.config;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;

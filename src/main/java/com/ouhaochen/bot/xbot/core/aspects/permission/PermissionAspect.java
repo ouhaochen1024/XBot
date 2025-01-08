@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.aspect.permission;
+package com.ouhaochen.bot.xbot.core.aspects.permission;
 
 
 import com.mikuac.shiro.dto.event.Event;
@@ -7,12 +7,12 @@ import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
 import com.ouhaochen.bot.xbot.commons.security.CurrentUserInfo;
 import com.ouhaochen.bot.xbot.commons.security.ThreadLocalUserInfo;
-import com.ouhaochen.bot.xbot.core.adapter.EventAdapter;
-import com.ouhaochen.bot.xbot.core.adapter.GroupAddRequestEventAdapter;
-import com.ouhaochen.bot.xbot.core.adapter.GroupMessageEventAdapter;
-import com.ouhaochen.bot.xbot.core.adapter.PrivateMessageEventAdapter;
-import com.ouhaochen.bot.xbot.core.configs.PluginConfig;
-import com.ouhaochen.bot.xbot.db.service.BotGroupService;
+import com.ouhaochen.bot.xbot.core.adapters.EventAdapter;
+import com.ouhaochen.bot.xbot.core.adapters.GroupAddRequestEventAdapter;
+import com.ouhaochen.bot.xbot.core.adapters.GroupMessageEventAdapter;
+import com.ouhaochen.bot.xbot.core.adapters.PrivateMessageEventAdapter;
+import com.ouhaochen.bot.xbot.core.config.PluginConfig;
+import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PermissionAspect {
 
-    private final BotGroupService botGroupService;
+    private final BotGroupDao botGroupService;
 
     @Around(value = "@annotation(permission)", argNames = "point,permission")
     public Object doBefore(ProceedingJoinPoint point, Permission permission) throws Throwable {

@@ -1,11 +1,11 @@
-package com.ouhaochen.bot.xbot.db.service.impl;
+package com.ouhaochen.bot.xbot.db.dao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ouhaochen.bot.xbot.commons.enums.DelFlagEnum;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import com.ouhaochen.bot.xbot.db.mapper.BotGroupMapper;
-import com.ouhaochen.bot.xbot.db.service.BotGroupService;
+import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @since 2025-01-04
  */
 @Service
-public class BotGroupServiceImpl extends ServiceImpl<BotGroupMapper, BotGroupEntity> implements BotGroupService {
+public class BotGroupDaoImpl extends ServiceImpl<BotGroupMapper, BotGroupEntity> implements BotGroupDao {
 
     @Override
     public boolean isGroupManager(Long userId, Long groupId) {

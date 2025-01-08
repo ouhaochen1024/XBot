@@ -6,6 +6,7 @@ import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.regex.Matcher;
@@ -13,67 +14,75 @@ import java.util.regex.Matcher;
 @Slf4j
 public final class MatcherUtil {
 
-    public static Long getLongStr(Bot bot, AnyMessageEvent event, Matcher matcher) {
+    public static final String WRONG_MSG = "命令格式有误";
+
+    public static Number getNumber(Bot bot, AnyMessageEvent event, Matcher matcher) {
         try {
             String str = matcher.group(1);
-            return StrUtil.isNumeric(str) ? Long.parseLong(str) : null;
+            return NumberUtil.parseNumber(str);
         } catch (Exception e) {
-            log.error("获取数字失败", e);
-            bot.sendMsg(event, "请输入正确的数字", false);
+            bot.sendMsg(event, WRONG_MSG, false);
             return null;
         }
     }
 
-    public static Long getLongStr(Bot bot, PrivateMessageEvent event, Matcher matcher) {
+    public static Number getNumber(Bot bot, PrivateMessageEvent event, Matcher matcher) {
         try {
             String str = matcher.group(1);
-            return StrUtil.isNumeric(str) ? Long.parseLong(str) : null;
+            return NumberUtil.parseNumber(str);
         } catch (Exception e) {
-            log.error("获取数字失败", e);
-            bot.sendPrivateMsg(event.getUserId(), "请输入正确的数字", false);
+            bot.sendPrivateMsg(event.getUserId(), WRONG_MSG, false);
             return null;
         }
     }
 
-    public static Long getLongStr(Bot bot, GroupMessageEvent event, Matcher matcher) {
+    public static Number getNumber(Bot bot, GroupMessageEvent event, Matcher matcher) {
         try {
             String str = matcher.group(1);
-            return StrUtil.isNumeric(str) ? Long.parseLong(str) : null;
+            return NumberUtil.parseNumber(str);
         } catch (Exception e) {
-            log.error("获取数字失败", e);
-            bot.sendGroupMsg(event.getGroupId(), "请输入正确的数字", false);
+            bot.sendGroupMsg(event.getGroupId(), WRONG_MSG, false);
             return null;
         }
     }
 
-    public static String getNormalStr(Bot bot, AnyMessageEvent event, Matcher matcher) {
+    public static String getNormal(Bot bot, AnyMessageEvent event, Matcher matcher) {
         try {
             String str = matcher.group(1);
-            return StrUtil.isNotBlank(str) ? str : null;
+            if (StrUtil.isBlank(str)) {
+                bot.sendMsg(event, WRONG_MSG, false);
+                return null;
+            }
+            return str;
         } catch (Exception e) {
-            log.error("获取字符串失败", e);
-            bot.sendMsg(event, "请输入正确的字符串", false);
+            bot.sendMsg(event, WRONG_MSG, false);
             return null;
         }
     }
 
-    public static String getNormalStr(Bot bot, PrivateMessageEvent event, Matcher matcher) {
+    public static String getNormal(Bot bot, PrivateMessageEvent event, Matcher matcher) {
         try {
             String str = matcher.group(1);
-            return StrUtil.isNotBlank(str) ? str : null;
+            if (StrUtil.isBlank(str)) {
+                bot.sendPrivateMsg(event.getUserId(), WRONG_MSG, false);
+                return null;
+            }
+            return str;
         } catch (Exception e) {
-            log.error("获取字符串失败", e);
-            bot.sendPrivateMsg(event.getUserId(), "请输入正确的字符串", false);
+            bot.sendPrivateMsg(event.getUserId(), WRONG_MSG, false);
             return null;
         }
     }
 
-    public static String getNormalStr(Bot bot, GroupMessageEvent event, Matcher matcher) {
+    public static String getNormal(Bot bot, GroupMessageEvent event, Matcher matcher) {
         try {
             String str = matcher.group(1);
-            return StrUtil.isNotBlank(str) ? str : null;
+            if (StrUtil.isBlank(str)) {
+                bot.sendGroupMsg(event.getGroupId(), WRONG_MSG, false);
+                return null;
+            }
+            return str;
         } catch (Exception e) {
-            log.error("获取字符串失败", e);
             bot.sendGroupMsg(event.getGroupId(), "请输入正确的字符串", false);
             return null;
         }

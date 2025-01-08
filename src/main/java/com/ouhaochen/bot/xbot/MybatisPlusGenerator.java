@@ -77,10 +77,10 @@ public class MybatisPlusGenerator {
                 )
                 .packageConfig(builder -> builder
                         .parent("com.ouhaochen.bot.xbot.db")
-                        .entity("domain.entity")
+                        .entity("entity")
                         .mapper("mapper")
-                        .service("service")
-                        .serviceImpl("service.impl")
+                        .service("dao")
+                        .serviceImpl("dao.impl")
                         .pathInfo(Collections.singletonMap(OutputFile.xml, projectPath + "/src/main/resources/mapper"))
                 )
                 .strategyConfig(builder -> builder
@@ -115,8 +115,8 @@ public class MybatisPlusGenerator {
                         .enableBaseColumnList()
                         //service
                         .serviceBuilder()
-                        .formatServiceFileName("%sService")
-                        .formatServiceImplFileName("%sServiceImpl")
+                        .formatServiceFileName("%sDao")
+                        .formatServiceImplFileName("%sDaoImpl")
                         //controller
                         .controllerBuilder()
                         .disable()

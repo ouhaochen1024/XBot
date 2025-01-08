@@ -1,8 +1,8 @@
-package com.ouhaochen.bot.xbot.core.plugins.service;
+package com.ouhaochen.bot.xbot.core.loader;
 
 import com.mikuac.shiro.annotation.common.Shiro;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
-import com.ouhaochen.bot.xbot.core.constants.XBotRedisConstantKey;
+import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,19 +16,19 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class LoadingPluginsService {
+public class PluginLoader {
 
     @Value("${redis.enabled}")
     private boolean isRedisEnabled;
     private final RedisTemplateClient redisTemplateClient;
 
     @PostConstruct
-    public void loadingPlugins() {
+    public void loadPlugins() {
         if (!isRedisEnabled) {
             return;
         }
         redisTemplateClient.delete(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY);
-        Set<String> pluginClassNames = loadPluginClassNames();
+        Set<String> pluginClassNames = getAllPluginClassNames();
         //存入缓存
         pluginClassNames.forEach(pluginClassName -> {
             String[] split = pluginClassName.split("\\.");
@@ -37,7 +37,7 @@ public class LoadingPluginsService {
         });
     }
 
-    public Set<String> loadPluginClassNames() {
+    public Set<String> getAllPluginClassNames() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(Shiro.class));
         return scanner.findCandidateComponents("com.ouhaochen.bot.xbot.core.plugins")

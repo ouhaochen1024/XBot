@@ -13,7 +13,7 @@ spring:
   config:
     additional-location: file:./config/
   profiles:
-    active: 'dev'
+    active: 'dev2'
   task:
     execution:
       thread-name-prefix: 'xbot-task-'
@@ -40,7 +40,6 @@ springdoc:
     operations-sorter: alpha
   api-docs:
     path: /v3/api-docs
-
 
 xbot:
   version: 'v1.0.0'
