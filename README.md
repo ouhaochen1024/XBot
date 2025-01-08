@@ -5,7 +5,7 @@
 <p style="text-align: center;">
     <a href="https://github.com/MisakaTAT/Shiro"><img alt="Shiro" src="https://img.shields.io/badge/Shiro-2.3.5-yellow.svg" /></a>
     <a href="https://openjdk.org/projects/jdk/"><img alt="JDK" src="https://img.shields.io/badge/JDK-17+-red.svg" /></a>
-    <a href="https://spring.io/projects/spring-boot"> <img alt="SpringBoot" src="https://img.shields.io/badge/SpringBoot-3.0+-brightgreen.svg" /></a>
+    <a href="https://spring.io/projects/spring-boot"> <img alt="SpringBoot" src="https://img.shields.io/badge/SpringBoot-3.0.0+-brightgreen.svg" /></a>
     <a href="https://www.postgresql.org/"><img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-15+-blue.svg" /></a>
     <a href="https://gradle.org/"><img alt="PostgreSQL" src="https://img.shields.io/badge/Gradle-8.0+-22afc8" /></a>
     <a href="https://redis.io/"><img alt="Redis" src="https://img.shields.io/badge/Redis-7.0+-ff4438" /></a>
@@ -17,17 +17,15 @@
 
 BasePlugin：
 
-1.插件全局状态管理（开关除BasePlugin以外的插件）
+1.插件状态管理（开关除BasePlugin以外的插件）
 
 2.插件权限管理（是否为机器人的管理者、QQ群是否有权限使用机器人）
 
-目前在开发的功能（插件）：
+目前在开发的插件：
 
-GroupManagePlugin：
+GroupManagePlugin（QQ群管理插件）
 
-QQ群管理
-
-后续预计新增的功能（插件）：
+后续预计新增的插件：
 
 天气查询
 
