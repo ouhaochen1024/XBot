@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.adapter;
+package com.ouhaochen.bot.xbot.core.adapters;
 
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 

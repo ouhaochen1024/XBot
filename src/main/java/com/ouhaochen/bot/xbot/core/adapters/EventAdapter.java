@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.adapter;
+package com.ouhaochen.bot.xbot.core.adapters;
 
 public interface EventAdapter {
     Long getBotId();

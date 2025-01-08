@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.web.controller;
+package com.ouhaochen.bot.xbot.core.controller;
 
 import com.ouhaochen.bot.xbot.commons.response.Response;
 import io.swagger.v3.oas.annotations.Operation;

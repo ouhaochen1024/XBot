@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.web.config;
+package com.ouhaochen.bot.xbot.commons.configs;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class Knife4jConfiguration {
+public class Knife4jConfig {
 
     @Value("${xbot.version}")
     private String version;
@@ -29,7 +29,7 @@ public class Knife4jConfiguration {
     @Bean
     public GroupedOpenApi defaultGroup() {
         return GroupedOpenApi.builder().group("defaultGroup")
-                .packagesToScan("com.ouhaochen.bot.xbot.web.controller")
+                .packagesToScan("com.ouhaochen.bot.xbot.core.controller")
                 .pathsToMatch("/apis/**")
                 .build();
     }

@@ -1,4 +1,4 @@
 /**
- * 机器人功能核心
+ * XBot功能核心
  */
 package com.ouhaochen.bot.xbot.core;
