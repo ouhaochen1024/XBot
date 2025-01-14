@@ -38,9 +38,3 @@ out/
 
 ### Logs ###
 *.log
-
-### github ###
-/.github/
-
-### generator ###
-/src/main/java/com/ouhaochen/bot/xbot/generator/MybatisPlusGenerator.java
