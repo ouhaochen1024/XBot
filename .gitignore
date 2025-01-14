@@ -43,4 +43,4 @@ out/
 /.github/
 
 ### generator ###
-/src/main/java/com/ouhaochen/bot/xbot/generator/
+/src/main/java/com/ouhaochen/bot/xbot/generator/MybatisPlusGenerator.java
