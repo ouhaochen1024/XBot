@@ -42,5 +42,3 @@ out/
 ### github ###
 /.github/
 
-### MybatisPlusGenerator类 ###
-MybatisPlusGenerator.java
