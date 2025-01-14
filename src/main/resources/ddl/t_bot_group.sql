@@ -11,8 +11,8 @@ CREATE TABLE "dev"."t_bot_group" (
 )
 ;
 
--- ALTER TABLE "dev"."t_bot_group"
---     OWNER TO "ggbond";
+ALTER TABLE "dev"."t_bot_group"
+    OWNER TO "ggbond";
 
 CREATE INDEX "t_bot_group_group_id_bot_id_idx" ON "dev"."t_bot_group" USING btree (
                                                                                    "group_id" "pg_catalog"."int8_ops" ASC NULLS LAST,
