@@ -1,6 +1,5 @@
 package com.ouhaochen.bot.xbot.commons.redis.clients;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -154,8 +153,6 @@ public class RedisTemplateClient {
 
     /**
      * 删除
-     *
-     * @return
      */
     public void delete(final String key) {
         if (StrUtil.isBlank(key)) {

@@ -21,6 +21,7 @@ public class GroupManagePlugin {
     @Permission(checkUser = false)
     @GroupAddRequestHandler
     public void handleAddGroup(Bot bot, GroupAddRequestEvent event){
+
         if (true) {
            return;
         }

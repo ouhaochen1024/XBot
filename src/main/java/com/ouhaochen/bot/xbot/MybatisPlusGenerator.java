@@ -21,6 +21,8 @@ public class MybatisPlusGenerator {
      * 数据库链接地址
      */
     private static final String URL = "jdbc:postgresql://192.168.31.117:5432/bot?currentSchema=dev&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true";
+    private static final String URL2 = "jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=prod&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true";
+
 
     /**
      * 用户名
@@ -56,7 +58,7 @@ public class MybatisPlusGenerator {
         }
 
         String projectPath = System.getProperty("user.dir");
-        FastAutoGenerator.create(URL, USERNAME, PASSWORD)
+        FastAutoGenerator.create(URL2, USERNAME, PASSWORD)
                 .dataSourceConfig(builder ->
                                 builder.typeConvert(new PostgreSqlTypeConvert() {
                                     // 自定义数据库表字段类型转换【可选】

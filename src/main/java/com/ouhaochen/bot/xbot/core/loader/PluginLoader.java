@@ -1,6 +1,5 @@
 package com.ouhaochen.bot.xbot.core.loader;
 
-import com.mikuac.shiro.annotation.common.Shiro;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
