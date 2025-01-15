@@ -38,6 +38,3 @@ out/
 
 ### Logs ###
 *.log
-
-### github ###
-/.github/

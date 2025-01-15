@@ -1,9 +1,8 @@
-package com.ouhaochen.bot.xbot;
+package com.ouhaochen.bot.xbot.commons.generator;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
-import com.baomidou.mybatisplus.generator.config.converts.PostgreSqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
@@ -21,6 +20,8 @@ public class MybatisPlusGenerator {
      * 数据库链接地址
      */
     private static final String URL = "jdbc:postgresql://192.168.31.117:5432/bot?currentSchema=dev&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true";
+    private static final String URL2 = "jdbc:postgresql://100.124.153.30:5432/bot?currentSchema=dev&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true";
+
 
     /**
      * 用户名
@@ -46,7 +47,7 @@ public class MybatisPlusGenerator {
      * 需要生成的表名，必填
      */
     private static final String[] TABLES = {
-            "t_bot_group"
+            "t_bot_group_keyword"
     };
 
     public static void main(String[] args) {
@@ -56,9 +57,10 @@ public class MybatisPlusGenerator {
         }
 
         String projectPath = System.getProperty("user.dir");
-        FastAutoGenerator.create(URL, USERNAME, PASSWORD)
-                .dataSourceConfig(builder ->
-                                builder.typeConvert(new PostgreSqlTypeConvert() {
+        FastAutoGenerator.create(URL2, USERNAME, PASSWORD)
+//                .dataSourceConfig(
+//                        builder ->
+//                                builder.typeConvert(new PostgreSqlTypeConvert() {
                                     // 自定义数据库表字段类型转换【可选】
 //                            @Override
 //                            public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
@@ -67,8 +69,8 @@ public class MybatisPlusGenerator {
 //                                }
 //                                return super.processTypeConvert(globalConfig, fieldType);
 //                            }
-                                })
-                )
+//                                })
+//                )
                 .globalConfig(builder -> builder
                         .author(AUTHOR)
                         .outputDir(projectPath + "/src/main/java")

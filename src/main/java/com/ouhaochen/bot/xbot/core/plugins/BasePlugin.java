@@ -8,10 +8,11 @@ import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
+import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
 import com.ouhaochen.bot.xbot.core.service.BasePluginService;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
-import com.ouhaochen.bot.xbot.core.utils.SendMsgUtil;
+import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,53 +21,63 @@ import java.util.regex.Matcher;
 @Shiro
 @Component
 @RequiredArgsConstructor
+@Plugin(name = "基础插件", author = "ouhaochen", description = "XBot基础插件", exclude = true)
 public class BasePlugin {
 
     private final BasePluginService basePluginService;
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^打开插件\\s(.*)?$")
-    public void openPlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
+    @MessageHandlerFilter(cmd = "^启用插件\\s(.*)?$")
+    public void enablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
-        PluginServiceContext context = basePluginService.openPlugin(bot.getSelfId(), pluginName);
-        SendMsgUtil.sendResponse(bot, event, context);
+        PluginServiceContext context = basePluginService.enablePlugin(bot.getSelfId(), pluginName);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^关闭插件\\s(.*)?$")
-    public void closePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
+    @MessageHandlerFilter(cmd = "^禁用插件\\s(.*)?$")
+    public void disablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
-        PluginServiceContext context = basePluginService.closePlugin(bot.getSelfId(), pluginName);
-        SendMsgUtil.sendResponse(bot, event, context);
+        PluginServiceContext context = basePluginService.disablePlugin(bot.getSelfId(), pluginName);
+        ActionUtil.sendResponse(bot, event, context);
     }
+
+    @Permission(checkGroup = false)
+    @AnyMessageHandler
+    @MessageHandlerFilter(cmd = "^查看插件状态|插件状态")
+    public void viewPlugins(Bot bot, AnyMessageEvent event) {
+        PluginServiceContext context = basePluginService.viewPlugins(bot.getSelfId());
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
 
     @Permission(checkGroup = false)
     @GroupMessageHandler
-    @MessageHandlerFilter(cmd = "添加本群使用权限")
+    @MessageHandlerFilter(cmd = "添加本群|添加本群权限")
     public void addGroup(Bot bot, GroupMessageEvent event) {
         PluginServiceContext context = basePluginService.addGroup(event.getSelfId(), event.getGroupId());
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^添加群\\s(.*)?\\s使用权限$")
+    @MessageHandlerFilter(cmd = "^添加群\\s(.*)?$")
     public void addGroup(Bot bot, AnyMessageEvent event, Matcher matcher) {
         Number number = MatcherUtil.getNumber(bot, event, matcher);
         if (null == number) return;
         PluginServiceContext context = basePluginService.addGroup(event.getSelfId(), number.longValue());
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^删除群\\s(.*)?\\s使用权限$")
+    @MessageHandlerFilter(cmd = "^删除群\\s(.*)?$")
     public void delGroup(Bot bot, AnyMessageEvent event, Matcher matcher) {
         Number number = MatcherUtil.getNumber(bot, event, matcher);
         if (null == number) return;
         PluginServiceContext context = basePluginService.delGroup(event.getSelfId(), number.longValue());
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 }

@@ -1,22 +1,22 @@
 server:
   port: 8086
   servlet:
-    context-path: '/xbot'
+    context-path: /xbot
 
 spring:
   application:
     name: xbot
   servlet:
     multipart:
-      max-file-size: '100MB'
-      max-request-size: '1000MB'
+      max-file-size: 100MB
+      max-request-size: 1000MB
   config:
     additional-location: file:./config/
   profiles:
-    active: 'dev2'
+    active: dev2
   task:
     execution:
-      thread-name-prefix: 'xbot-task-'
+      thread-name-prefix: xbot-task-
       pool:
         core-size: 5
         max-size: 10
@@ -30,7 +30,7 @@ shiro:
   ws:
     server:
       enable: true
-      url: '/ws'
+      url: /ws
   plugin-list:
 
 springdoc:
@@ -42,6 +42,8 @@ springdoc:
     path: /v3/api-docs
 
 xbot:
-  version: 'v1.0.0'
-  formatted-version: ' (v1.0.0)'
+  version: v1.0.0
+  formatted-version:  (v1.0.0)
   supervisors: 549283548
+  plugins:
+    basePackage: com.ouhaochen.bot.xbot.core.plugins

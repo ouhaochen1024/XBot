@@ -25,6 +25,7 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
   type-aliases-package: com.ouhaochen.bot.xbot.db.entity
   configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     cache-enabled: false
     lazy-loading-enabled: false
     multiple-result-sets-enabled: true
@@ -37,4 +38,4 @@ mybatis-plus:
       schema: dev
 
 redis:
-  enabled: false
+  enabled: true

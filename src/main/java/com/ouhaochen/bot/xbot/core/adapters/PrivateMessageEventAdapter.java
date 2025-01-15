@@ -26,6 +26,6 @@ public class PrivateMessageEventAdapter implements EventAdapter {
 
     @Override
     public Long getGroupId() {
-        return 0L; // 私聊没有群组ID
+        return 0L;
     }
 }

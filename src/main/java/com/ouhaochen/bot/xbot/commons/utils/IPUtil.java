@@ -11,11 +11,11 @@ import java.util.Enumeration;
 
 public final class IPUtil {
 
-    private final static String localhost = "0:0:0:0:0:0:0:1";
+    private static final String localhost = "0:0:0:0:0:0:0:1";
     
-    private final static String localhost2 = "127.0.0.1";
+    private static final String localhost2 = "127.0.0.1";
 
-    private final static String unKnown = "unKnown";
+    private static final String unKnown = "unKnown";
     
     /**
      * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址,
