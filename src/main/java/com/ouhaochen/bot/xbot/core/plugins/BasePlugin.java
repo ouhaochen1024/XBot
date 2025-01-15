@@ -12,7 +12,7 @@ import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
 import com.ouhaochen.bot.xbot.core.service.BasePluginService;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
-import com.ouhaochen.bot.xbot.core.utils.SendMsgUtil;
+import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public class BasePlugin {
     public void enablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
         PluginServiceContext context = basePluginService.enablePlugin(bot.getSelfId(), pluginName);
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
@@ -41,7 +41,7 @@ public class BasePlugin {
     public void disablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
         PluginServiceContext context = basePluginService.disablePlugin(bot.getSelfId(), pluginName);
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
@@ -49,7 +49,7 @@ public class BasePlugin {
     @MessageHandlerFilter(cmd = "^查看插件状态|插件状态")
     public void viewPlugins(Bot bot, AnyMessageEvent event) {
         PluginServiceContext context = basePluginService.viewPlugins(bot.getSelfId());
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
 
@@ -58,7 +58,7 @@ public class BasePlugin {
     @MessageHandlerFilter(cmd = "添加本群|添加本群权限")
     public void addGroup(Bot bot, GroupMessageEvent event) {
         PluginServiceContext context = basePluginService.addGroup(event.getSelfId(), event.getGroupId());
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
@@ -68,7 +68,7 @@ public class BasePlugin {
         Number number = MatcherUtil.getNumber(bot, event, matcher);
         if (null == number) return;
         PluginServiceContext context = basePluginService.addGroup(event.getSelfId(), number.longValue());
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
@@ -78,6 +78,6 @@ public class BasePlugin {
         Number number = MatcherUtil.getNumber(bot, event, matcher);
         if (null == number) return;
         PluginServiceContext context = basePluginService.delGroup(event.getSelfId(), number.longValue());
-        SendMsgUtil.sendResponse(bot, event, context);
+        ActionUtil.sendResponse(bot, event, context);
     }
 }

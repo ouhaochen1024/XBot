@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.generator;
+package com.ouhaochen.bot.xbot.commons.generator;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
