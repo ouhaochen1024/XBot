@@ -28,7 +28,7 @@ public class BasePlugin {
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^启用插件\\s(.*)?$")
+    @MessageHandlerFilter(cmd = "^(?:启用插件|启用)\\s+(.*)$")
     public void enablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
         PluginServiceContext context = basePluginService.enablePlugin(bot.getSelfId(), pluginName);
@@ -37,7 +37,7 @@ public class BasePlugin {
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^禁用插件\\s(.*)?$")
+    @MessageHandlerFilter(cmd = "^(?:禁用插件|禁用)\\s+(.*)$")
     public void disablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
         PluginServiceContext context = basePluginService.disablePlugin(bot.getSelfId(), pluginName);
@@ -46,7 +46,7 @@ public class BasePlugin {
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^查看插件状态|插件状态")
+    @MessageHandlerFilter(cmd = "查看插件状态|插件状态")
     public void viewPlugins(Bot bot, AnyMessageEvent event) {
         PluginServiceContext context = basePluginService.viewPlugins(bot.getSelfId());
         ActionUtil.sendResponse(bot, event, context);
@@ -58,6 +58,14 @@ public class BasePlugin {
     @MessageHandlerFilter(cmd = "添加本群|添加本群权限")
     public void addGroup(Bot bot, GroupMessageEvent event) {
         PluginServiceContext context = basePluginService.addGroup(event.getSelfId(), event.getGroupId());
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
+    @Permission(checkGroup = false)
+    @GroupMessageHandler
+    @MessageHandlerFilter(cmd = "删除本群|删除本群权限")
+    public void delGroup(Bot bot, GroupMessageEvent event) {
+        PluginServiceContext context = basePluginService.delGroup(event.getSelfId(), event.getGroupId());
         ActionUtil.sendResponse(bot, event, context);
     }
 

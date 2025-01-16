@@ -20,10 +20,10 @@ public final class CommonUtil {
             if (!StrUtil.isAllBlank(plugin.name(), plugin.value())) {
                 pluginName = StrUtil.isNotBlank(plugin.value()) ? plugin.value() : plugin.name();
             } else {
-                pluginName = getClassName(clazz);
+                pluginName = clazz.getSimpleName();
             }
         } else {
-            pluginName = getClassName(clazz);
+            pluginName = clazz.getSimpleName();
         }
         return pluginName;
     }
@@ -46,11 +46,11 @@ public final class CommonUtil {
         return pluginExclude;
     }
 
-    //获取类名
-    private static String getClassName(Class<?> clazz) {
-        String className = clazz.getName();
-        String[] split = className.split("\\.");
-        return split[split.length - 1];
+    public static String getAddGroupAnswer(String comment) {
+        String[] spitArray = comment.split("\n");
+        if (spitArray.length == 2) {
+            return spitArray[1].substring(3);
+        }
+        return comment;
     }
-
 }
