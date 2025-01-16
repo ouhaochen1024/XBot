@@ -3,13 +3,13 @@ package com.ouhaochen.bot.xbot.core.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ouhaochen.bot.xbot.commons.enums.DelFlagEnum;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
+import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
 import com.ouhaochen.bot.xbot.db.dao.BotGroupKeywordDao;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupKeywordEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +67,7 @@ public class GroupManageService {
         if (keywordList.isEmpty()) {
             return context;
         }
-        boolean isExist = keywordList.stream().anyMatch(getAddGroupAnswer(comment)::contains);
+        boolean isExist = keywordList.stream().anyMatch(CommonUtil.getAddGroupAnswer(comment)::contains);
         if (isExist) {
             context.setApprove(Boolean.TRUE);
         } else {
@@ -75,14 +75,5 @@ public class GroupManageService {
             context.setApprove(Boolean.FALSE);
         }
         return context;
-    }
-
-
-    private String getAddGroupAnswer(String comment) {
-        String[] spitArray = comment.split("\n");
-        if (spitArray.length == 2) {
-            return spitArray[1].substring(3);
-        }
-        return comment;
     }
 }

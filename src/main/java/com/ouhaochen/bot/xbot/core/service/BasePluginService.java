@@ -27,7 +27,7 @@ public class BasePluginService {
     private final RedisTemplateClient redisTemplateClient;
 
     public PluginServiceContext enablePlugin(Long botId, String pluginName) {
-        if (CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
+        if (pluginName == null || CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
         PluginServiceContext context = new PluginServiceContext();
         if (checkPluginNotExist(pluginName)) {
             return context.setMsg(String.format("插件【%s】不存在", pluginName));
@@ -38,7 +38,7 @@ public class BasePluginService {
     }
 
     public PluginServiceContext disablePlugin(Long botId, String pluginName) {
-        if (CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
+        if (pluginName == null || CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
         PluginServiceContext context = new PluginServiceContext();
         if (checkPluginNotExist(pluginName)) {
             return context.setMsg(String.format("插件【%s】不存在", pluginName));
