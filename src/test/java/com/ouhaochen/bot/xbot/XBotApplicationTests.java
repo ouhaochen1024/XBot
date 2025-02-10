@@ -1,6 +1,8 @@
 package com.ouhaochen.bot.xbot;
 
 import com.ouhaochen.bot.xbot.extra.onmyoji.api.DsApi;
+import com.ouhaochen.bot.xbot.extra.onmyoji.response.Response;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,7 +16,10 @@ class XBotApplicationTests {
 
 	@Test
 	void test() {
-		System.out.println(DsApi.getOfficialFeeds());
+		Response response = DsApi.getOfficialFeeds();
+		Response.Feed feed =response.getResult().getFeeds().get(0);
+		feed.setContentPO(JSONUtil.toBean(feed.getContent(), Response.Content.class));
+		System.out.println(feed);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.ouhaochen.bot.xbot.extra.onmyoji.response;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data
@@ -23,9 +24,31 @@ public class Response {
         private String uid;
         private int type;
         private String content;
-        private long deleteTime;
-        private long createTime;
-        private long updateTime;
+        private Content contentPO;
+        private Long deleteTime;
+        private Long createTime;
+        private Long updateTime;
+    }
+
+    @Data
+    public static class Content {
+        private Integer type;
+        private Body body;
+    }
+
+    @Data
+    public static class Body {
+        private String text;
+        private List<Media> media;
+    }
+
+    @Data
+    public static class Media {
+        private String url;
+        private String mimeType;
+        private Integer size;
+        private Integer width;
+        private Integer height;
     }
 
     @Data
@@ -45,19 +68,19 @@ public class Response {
         private String identityType;
         private int followerLevel;
         private String exclusiveTopic;
-        private long deleteTime;
-        private long createTime;
-        private long updateTime;
+        private Long deleteTime;
+        private Long createTime;
+        private Long updateTime;
     }
 
     @Data
     public static class UserRecord {
         private String uid;
-        private int feedCount;
-        private int followerCount;
-        private int followingCount;
-        private int squareCount;
-        private int likeCount;
+        private Integer feedCount;
+        private Integer followerCount;
+        private Integer followingCount;
+        private Integer squareCount;
+        private Integer likeCount;
         private String lastPostIpLocation;
     }
 
