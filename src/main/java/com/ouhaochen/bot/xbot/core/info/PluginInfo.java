@@ -1,11 +1,10 @@
-package com.ouhaochen.bot.xbot.core.plugins.info;
+package com.ouhaochen.bot.xbot.core.info;
 
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
 import lombok.Data;
 
 @Data
 public class PluginInfo {
-
     private String pluginName;
     private String pluginDesc;
     private String pluginAuthor;

@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.plugins;
+package com.ouhaochen.bot.xbot.core.plugins.official;
 
 import com.mikuac.shiro.annotation.GroupAddRequestHandler;
 import com.mikuac.shiro.annotation.GroupMessageHandler;
@@ -10,10 +10,11 @@ import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
 import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
-import com.ouhaochen.bot.xbot.core.service.GroupManagePluginService;
+import com.ouhaochen.bot.xbot.core.service.official.GroupManagePluginService;
 import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
 import lombok.RequiredArgsConstructor;
+import org.dromara.hutool.core.thread.ThreadUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -24,14 +25,14 @@ import java.util.regex.Matcher;
 @Plugin(name = "群聊管理", author = "ouhaochen", description = "XBot群聊管理插件")
 public class GroupManagePlugin {
 
-    private final GroupManagePluginService groupManageService;
+    private final GroupManagePluginService groupManagePluginService;
 
     @Permission
     @GroupMessageHandler
     @MessageHandlerFilter(cmd = "^添加入群关键词\\s(.*)?$")
     public void addGroupKeyword(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
-        PluginServiceContext context = groupManageService.addGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
+        PluginServiceContext context = groupManagePluginService.addGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
         ActionUtil.sendResponse(bot, event, context);
     }
 
@@ -40,15 +41,21 @@ public class GroupManagePlugin {
     @MessageHandlerFilter(cmd = "^删除入群关键词\\s(.*)?$")
     public void delGroupKeyword(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
-        PluginServiceContext context = groupManageService.delGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
+        PluginServiceContext context = groupManagePluginService.delGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
         ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkUser = false)
     @GroupAddRequestHandler
     public void handleAddGroup(Bot bot, GroupAddRequestEvent event){
-        PluginServiceContext context = groupManageService.handleAddGroup(bot.getSelfId(), event.getGroupId(), event.getComment());
+        PluginServiceContext context = groupManagePluginService.handleAddGroup(bot.getSelfId(), event.getUserId(), event.getGroupId(), event.getComment());
         ActionUtil.handleGroupAdd(bot, event.getFlag(), event.getSubType(), context.getApprove(), context.getApproveReason());
+        if (context.getApprove()) {
+            ThreadUtil.sleep(1000);
+            GroupMessageEvent groupMessageEvent = new GroupMessageEvent();
+            groupMessageEvent.setGroupId(event.getGroupId());
+            ActionUtil.sendResponse(bot, groupMessageEvent, context);
+        }
     }
 
 }

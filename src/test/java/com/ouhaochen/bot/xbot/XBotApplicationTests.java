@@ -1,5 +1,6 @@
 package com.ouhaochen.bot.xbot;
 
+import com.ouhaochen.bot.xbot.extra.onmyoji.api.DsApi;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,6 +10,11 @@ class XBotApplicationTests {
 	@Test
 	void contextLoads() {
 		System.out.println("Hello World!");
+	}
+
+	@Test
+	void test() {
+		System.out.println(DsApi.getOfficialFeeds());
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.service;
+package com.ouhaochen.bot.xbot.core.service.official;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mikuac.shiro.common.utils.MsgUtils;
@@ -8,7 +8,7 @@ import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
-import com.ouhaochen.bot.xbot.core.plugins.info.PluginInfo;
+import com.ouhaochen.bot.xbot.core.info.PluginInfo;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
 import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
