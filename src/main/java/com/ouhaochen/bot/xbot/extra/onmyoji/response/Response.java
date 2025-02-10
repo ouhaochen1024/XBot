@@ -23,6 +23,9 @@ public class Response {
         private String uid;
         private int type;
         private String content;
+        private long deleteTime;
+        private long createTime;
+        private long updateTime;
     }
 
     @Data
