@@ -10,9 +10,9 @@ import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
-import com.ouhaochen.bot.xbot.core.service.BasePluginService;
-import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
+import com.ouhaochen.bot.xbot.core.service.SystemPluginService;
 import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
+import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +21,10 @@ import java.util.regex.Matcher;
 @Shiro
 @Component
 @RequiredArgsConstructor
-@Plugin(name = "基础插件", author = "ouhaochen", description = "XBot基础插件", exclude = true)
-public class BasePlugin {
+@Plugin(name = "系统插件", author = "ouhaochen", description = "XBot系统插件", exclude = true)
+public class SystemPlugin {
 
-    private final BasePluginService basePluginService;
+    private final SystemPluginService basePluginService;
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
@@ -46,7 +46,7 @@ public class BasePlugin {
 
     @Permission(checkGroup = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "查看插件状态|插件状态")
+    @MessageHandlerFilter(cmd = "插件列表")
     public void viewPlugins(Bot bot, AnyMessageEvent event) {
         PluginServiceContext context = basePluginService.viewPlugins(bot.getSelfId());
         ActionUtil.sendResponse(bot, event, context);

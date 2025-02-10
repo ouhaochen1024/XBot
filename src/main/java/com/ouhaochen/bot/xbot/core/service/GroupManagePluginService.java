@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class GroupManageService {
+public class GroupManagePluginService {
 
     private final BotGroupKeywordDao botGroupKeywordDao;
 

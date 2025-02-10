@@ -16,7 +16,7 @@ public final class CommonUtil {
     public static String getPluginName(Class<?> clazz) {
         String pluginName;
         if (clazz.isAnnotationPresent(Plugin.class)) {
-            Plugin plugin = clazz.getAnnotation(com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin.class);
+            Plugin plugin = clazz.getAnnotation(Plugin.class);
             if (!StrUtil.isAllBlank(plugin.name(), plugin.value())) {
                 pluginName = StrUtil.isNotBlank(plugin.value()) ? plugin.value() : plugin.name();
             } else {
