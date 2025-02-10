@@ -9,9 +9,10 @@ public enum TrueOrFalseEnum {
     /**
      *  真假枚举
      */
-    FALSE(0, "false"),
-    TRUE(1, "true");
+    FALSE(0, "0", "false"),
+    TRUE(1, "1", "true");
 
     private final Integer code;
+    private final String strCode;
     private final String description;
 }

@@ -7,13 +7,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PluginStatusEnum {
     //0 禁用 1 启用
-    DISABLED(0, "禁用"),
-    ENABLED(1, "启用");
+    DISABLED("0", "0", "禁用", "\uD83D\uDD34"),
+    ENABLED("1", "1", "启用", "\uD83D\uDFE2");
 
-    private final Integer code;
-    private final String message;
+    private final String code;
+    private final String strCode;
+    private final String status;
+    private final String icon;
 
-    public static PluginStatusEnum getPluginStatusEnum(Integer code) {
+    public static PluginStatusEnum getPluginStatusEnum(String code) {
         for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
             if (pluginStatusEnum.getCode().equals(code)) {
                 return pluginStatusEnum;
@@ -22,10 +24,19 @@ public enum PluginStatusEnum {
         return null;
     }
 
-    public static String getMessage(Integer code) {
+    public static String getStatus(Integer code) {
         for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
             if (pluginStatusEnum.getCode().equals(code)) {
-                return pluginStatusEnum.getMessage();
+                return pluginStatusEnum.getStatus();
+            }
+        }
+        return null;
+    }
+
+    public static String getIcon(Integer code) {
+        for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
+            if (pluginStatusEnum.getCode().equals(code)) {
+                return pluginStatusEnum.getIcon();
             }
         }
         return null;

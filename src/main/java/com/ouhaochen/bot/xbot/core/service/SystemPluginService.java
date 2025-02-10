@@ -1,12 +1,14 @@
 package com.ouhaochen.bot.xbot.core.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.mikuac.shiro.common.utils.MsgUtils;
 import com.ouhaochen.bot.xbot.commons.enums.DelFlagEnum;
 import com.ouhaochen.bot.xbot.commons.enums.TrueOrFalseEnum;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
+import com.ouhaochen.bot.xbot.core.plugins.info.PluginInfo;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
 import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
@@ -14,12 +16,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class BasePluginService {
+public class SystemPluginService {
 
     @Value("${xbot.plugins.basePackage}")
     private String basePackage;
@@ -50,27 +53,42 @@ public class BasePluginService {
 
     public PluginServiceContext viewPlugins(long botId) {
         //检查目前插件状态 没有在插件列表的插件默认给开启的缓存
-        List<String> pluginList = redisTemplateClient.getSet(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY).stream().map(Object::toString).toList();
+        List<String> pluginList = new java.util.ArrayList<>(redisTemplateClient.getSet(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY).stream().map(Object::toString).toList());
+        //查漏
         for (String pluginName : pluginList) {
             if (!redisTemplateClient.hasHashKey(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + botId, pluginName)) {
                 redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + botId, pluginName, TrueOrFalseEnum.TRUE.getCode());
             }
         }
-        //正式查询状态
-        PluginServiceContext context = new PluginServiceContext();
+        //删除不存在的插件
         Map<String, String> pluginStatusMap = redisTemplateClient.hGetAll(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + botId);
-        for(String exclude : CommonUtil.getPluginExclude(basePackage)){
-            pluginStatusMap.remove(exclude);
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> pluginStatus : pluginStatusMap.entrySet()) {
-            sb.append(pluginStatus.getKey()).append("：").append(PluginStatusEnum.getMessage(Integer.valueOf((pluginStatus.getValue()))));
-           //判断有没有下一个元素再拼接换行
-            if (pluginStatusMap.entrySet().stream().toList().indexOf(pluginStatus) != pluginStatusMap.size() - 1) {
-                sb.append("\n");
+        for (String pluginName : pluginStatusMap.keySet()) {
+            if (!pluginList.contains(pluginName)) {
+                redisTemplateClient.deleteHash(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + botId, pluginName);
+                pluginStatusMap.remove(pluginName);
             }
         }
-        return context.setMsg(sb.toString());
+        //正式查询状态
+        PluginServiceContext context = new PluginServiceContext();
+        for(String exclude : CommonUtil.getPluginExclude(basePackage)){
+            pluginStatusMap.remove(exclude);
+            pluginList.remove(exclude);
+        }
+        //排序
+        List<PluginInfo> pluginInfoList = pluginList.stream()
+                .map(pluginName -> new PluginInfo(pluginName, pluginStatusMap.get(pluginName)))
+                .sorted(Comparator.comparing((PluginInfo info) -> Integer.parseInt(info.getPluginStatusCode()))
+                        .reversed()
+                        .thenComparing(PluginInfo::getPluginName))
+                .toList();
+        //构建消息
+        MsgUtils msgUtils = MsgUtils.builder().text("〓 插件列表 〓" + "\n");
+        for (PluginInfo pluginInfo : pluginInfoList) {
+            msgUtils.text(pluginInfo.getPluginStatus().getIcon() + "【" + pluginInfo.getPluginName() + "】" + "\n");
+        }
+        //总量
+        msgUtils.text("共" + pluginStatusMap.size() + "个，启用" + pluginStatusMap.values().stream().filter(s -> s.equals(PluginStatusEnum.ENABLED.getStrCode())).count() + "个");
+        return context.setMsg(msgUtils.build());
     }
 
     public PluginServiceContext addGroup(Long botId, Long groupId) {
