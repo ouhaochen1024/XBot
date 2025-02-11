@@ -4,6 +4,7 @@ import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
+import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.dromara.hutool.core.text.StrUtil;
@@ -24,6 +25,7 @@ public class PluginLoader {
     private boolean enabled;
     @Value("${xbot.plugins.basePackage}")
     private String basePackage;
+    private final BotGroupDao botGroupDao;
     private final RedisTemplateClient redisTemplateClient;
 
     @PostConstruct
@@ -34,8 +36,8 @@ public class PluginLoader {
         //todo
         redisTemplateClient.delete(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY);
         // 存入缓存
-        CommonUtil.getAllPluginNames(basePackage).forEach(pluginName -> {
-            redisTemplateClient.putSet(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY, pluginName);
+        CommonUtil.getAllPluginInfos(basePackage).forEach(pluginInfo -> {
+            redisTemplateClient.putSet(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY, pluginInfo);
         });
     }
 }

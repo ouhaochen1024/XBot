@@ -7,10 +7,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 public @interface Plugin {
     /**
-     * 插件名称(默认)
-     */
-    String value() default "";
-    /**
      * 插件名称
      */
     String name() default "";

@@ -37,7 +37,7 @@ public class StatusAspect {
         Object[] args = point.getArgs();
         Bot bot = (Bot) args[0];
         //查询名称并查找状态
-        String pluginName = CommonUtil.getPluginName(point.getTarget().getClass());
+        String pluginName = CommonUtil.getPluginInfo(point.getTarget().getClass()).getName();
         Integer status = (Integer) redisTemplateClient.getHashValue(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + bot.getSelfId(), pluginName);
         if (status == null) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + bot.getSelfId(), pluginName, TrueOrFalseEnum.TRUE.getCode());

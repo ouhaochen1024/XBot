@@ -24,7 +24,7 @@ public enum PluginStatusEnum {
         return null;
     }
 
-    public static String getStatus(Integer code) {
+    public static String getStatus(String code) {
         for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
             if (pluginStatusEnum.getCode().equals(code)) {
                 return pluginStatusEnum.getStatus();
@@ -33,7 +33,7 @@ public enum PluginStatusEnum {
         return null;
     }
 
-    public static String getIcon(Integer code) {
+    public static String getIcon(String code) {
         for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
             if (pluginStatusEnum.getCode().equals(code)) {
                 return pluginStatusEnum.getIcon();

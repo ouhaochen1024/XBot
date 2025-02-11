@@ -1,22 +1,29 @@
 package com.ouhaochen.bot.xbot.core.info;
 
-import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
+@Builder
 public class PluginInfo {
-    private String pluginName;
-    private String pluginDesc;
-    private String pluginAuthor;
-    private String pluginVersion;
-    private String pluginStatusCode;
-    private PluginStatusEnum pluginStatus;
+    private String name;
+    private String author;
+    private String version;
+    private String description;
+    private Boolean enable;
+    private Boolean system;
+    private String status;
 
-    public PluginInfo(String pluginName, String pluginStatusCode) {
-        this.pluginName = pluginName;
-        this.pluginStatusCode = pluginStatusCode;
-        this.pluginStatus = PluginStatusEnum.getPluginStatusEnum(pluginStatusCode);
+    public PluginInfo(String name, String author, String version, String description, Boolean enable, Boolean system, String status) {
+        this.name = name;
+        this.author = author;
+        this.version = version;
+        this.description = description;
+        this.enable = enable;
+        this.system = system;
+        this.status = status;
+    }
+
+    public PluginInfo() {
     }
 }
