@@ -1,6 +1,5 @@
-package com.ouhaochen.bot.xbot.extra.onmyoji.api;
+package com.ouhaochen.bot.xbot.extra.plugins.onmyoji_plugin;
 
-import com.ouhaochen.bot.xbot.extra.onmyoji.response.Response;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.json.JSONUtil;
 
@@ -26,6 +25,4 @@ public final class DsApi {
                 .bodyStr();
         return JSONUtil.toBean(body, Response.class);
     }
-
-
 }

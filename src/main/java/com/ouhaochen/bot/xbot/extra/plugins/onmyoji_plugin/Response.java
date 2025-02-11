@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.extra.onmyoji.response;
+package com.ouhaochen.bot.xbot.extra.plugins.onmyoji_plugin;
 
 import lombok.Data;
 
@@ -22,7 +22,7 @@ public class Response {
     public static class Feed {
         private String id;
         private String uid;
-        private int type;
+        private Integer type;
         private String content;
         private Content contentPO;
         private Long deleteTime;
@@ -63,10 +63,10 @@ public class Response {
         private String nick;
         private String icon;
         private String intro;
-        private int gender;
+        private Integer gender;
         private String identityAuthenticInfo;
         private String identityType;
-        private int followerLevel;
+        private Integer followerLevel;
         private String exclusiveTopic;
         private Long deleteTime;
         private Long createTime;

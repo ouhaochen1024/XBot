@@ -1,13 +1,19 @@
 package com.ouhaochen.bot.xbot.core.utils;
 
-
 import com.mikuac.shiro.core.Bot;
+import com.mikuac.shiro.core.BotContainer;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
+import lombok.RequiredArgsConstructor;
 import org.dromara.hutool.core.text.StrUtil;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public final class ActionUtil {
+
+    private final BotContainer botContainer;
 
     public static void sendResponse(Bot bot, AnyMessageEvent event, PluginServiceContext context) {
         if (StrUtil.isBlank(context.getMsg())) return;
@@ -17,6 +23,18 @@ public final class ActionUtil {
     public static void sendResponse(Bot bot, GroupMessageEvent event, PluginServiceContext context) {
         if (StrUtil.isBlank(context.getMsg())) return;
         bot.sendGroupMsg(event.getGroupId(), context.getMsg(), context.getAutoEscape());
+    }
+
+    public void sendPrivateResponse(Long botId, Long userId, PluginServiceContext context) {
+        if (StrUtil.isBlank(context.getMsg())) return;
+        Bot bot = botContainer.robots.get(botId);
+        bot.sendPrivateMsg(userId, context.getMsg(), context.getAutoEscape());
+    }
+
+    public void sendGroupResponse(Long botId, Long groupId, PluginServiceContext context) {
+        if (StrUtil.isBlank(context.getMsg())) return;
+        Bot bot = botContainer.robots.get(botId);
+        bot.sendGroupMsg(groupId, context.getMsg(), context.getAutoEscape());
     }
 
     public static void handleGroupAdd(Bot bot, String flag, String subType, boolean approve, String reason) {

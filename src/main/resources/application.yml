@@ -46,4 +46,5 @@ xbot:
   formatted-version:  (v1.0.0)
   supervisors: 549283548
   plugins:
-    basePackage: com.ouhaochen.bot.xbot.core.plugins
+    basePackage: com.ouhaochen.bot.xbot
+

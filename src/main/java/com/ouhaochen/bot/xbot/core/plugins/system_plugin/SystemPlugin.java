@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.plugins.official;
+package com.ouhaochen.bot.xbot.core.plugins.system_plugin;
 
 import com.mikuac.shiro.annotation.AnyMessageHandler;
 import com.mikuac.shiro.annotation.GroupMessageHandler;
@@ -10,7 +10,6 @@ import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
-import com.ouhaochen.bot.xbot.core.service.official.SystemPluginService;
 import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
 import lombok.RequiredArgsConstructor;

@@ -27,11 +27,11 @@ public class StatusAspect {
     private List<String> active;
     private final RedisTemplateClient redisTemplateClient;
 
-    @Pointcut("execution(* com.ouhaochen.bot.xbot.core.plugins..*.*(..))")
+    @Pointcut("@annotation(com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin)")
     public void plugins() {
     }
 
-    @Around("plugins()")
+    @Around(value = "plugins()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         // if (!active.contains("prod")) return point.proceed();
         Object[] args = point.getArgs();

@@ -1,6 +1,7 @@
 package com.ouhaochen.bot.xbot.core.context;
 
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
