@@ -27,6 +27,10 @@ public @interface Plugin {
      */
     String description() default "一个XBot插件";
     /**
+     * 是否默认启用
+     */
+    boolean enable() default true;
+    /**
      * 该插件是否排除插件管理查询
      */
     boolean exclude() default false;

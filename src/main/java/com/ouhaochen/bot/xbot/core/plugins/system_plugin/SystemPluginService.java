@@ -6,7 +6,7 @@ import com.ouhaochen.bot.xbot.commons.enums.DelFlagEnum;
 import com.ouhaochen.bot.xbot.commons.enums.TrueOrFalseEnum;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
-import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
+import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
 import com.ouhaochen.bot.xbot.core.info.PluginInfo;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
@@ -29,29 +29,27 @@ public class SystemPluginService {
     private final BotGroupDao botGroupDao;
     private final RedisTemplateClient redisTemplateClient;
 
-    public PluginServiceContext enablePlugin(Long botId, String pluginName) {
+    public BotContext<Object> enablePlugin(Long botId, String pluginName) {
         if (pluginName == null || CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
-        PluginServiceContext context = new PluginServiceContext();
         if (checkPluginNotExist(pluginName)) {
-            return context.setMsg(String.format("插件【%s】不存在", pluginName));
+            return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
         // 存入缓存
         redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + botId, pluginName, TrueOrFalseEnum.TRUE.getCode());
-        return context.setMsg(String.format("插件【%s】已启用", pluginName));
+        return BotContext.ofMsg(String.format("插件【%s】已启用", pluginName));
     }
 
-    public PluginServiceContext disablePlugin(Long botId, String pluginName) {
+    public BotContext<Object> disablePlugin(Long botId, String pluginName) {
         if (pluginName == null || CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
-        PluginServiceContext context = new PluginServiceContext();
         if (checkPluginNotExist(pluginName)) {
-            return context.setMsg(String.format("插件【%s】不存在", pluginName));
+            return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
         // 存入缓存
         redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + botId, pluginName, TrueOrFalseEnum.FALSE.getCode());
-        return context.setMsg(String.format("插件【%s】已禁用", pluginName));
+        return BotContext.ofMsg(String.format("插件【%s】已禁用", pluginName));
     }
 
-    public PluginServiceContext viewPlugins(long botId) {
+    public BotContext<List<PluginInfo>> viewPlugins(Long botId) {
         //检查目前插件状态 没有在插件列表的插件默认给开启的缓存
         List<String> pluginList = new java.util.ArrayList<>(redisTemplateClient.getSet(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY).stream().map(Object::toString).toList());
         //查漏
@@ -69,8 +67,7 @@ public class SystemPluginService {
             }
         }
         //正式查询状态
-        PluginServiceContext context = new PluginServiceContext();
-        for(String exclude : CommonUtil.getPluginExclude(basePackage)){
+        for (String exclude : CommonUtil.getPluginExclude(basePackage)) {
             pluginStatusMap.remove(exclude);
             pluginList.remove(exclude);
         }
@@ -88,30 +85,28 @@ public class SystemPluginService {
         }
         //总量
         msgUtils.text("共" + pluginStatusMap.size() + "个，启用" + pluginStatusMap.values().stream().filter(s -> s.equals(PluginStatusEnum.ENABLED.getStrCode())).count() + "个");
-        return context.setMsg(msgUtils.build());
+        return BotContext.ofData(msgUtils.build(), pluginInfoList);
     }
 
-    public PluginServiceContext addGroup(Long botId, Long groupId) {
-        PluginServiceContext context = new PluginServiceContext();
+    public BotContext<Object> addGroup(Long botId, Long groupId) {
         // 判断是否已经添加
         boolean isExist = botGroupDao.exists(new LambdaQueryWrapper<BotGroupEntity>().eq(BotGroupEntity::getGroupId, groupId).eq(BotGroupEntity::getBotId, botId).eq(BotGroupEntity::getDelFlag, DelFlagEnum.NOT_DELETED.getCode()));
         if (isExist) {
-            return context.setMsg(String.format("群【%d】已经添加过了", groupId));
+            return BotContext.ofMsg(String.format("群【%d】已经添加过了", groupId));
         }
         // 入库
         botGroupDao.save(new BotGroupEntity().setGroupId(groupId).setBotId(botId));
-        return context.setMsg(String.format("群【%d】已经添加成功", groupId));
+        return BotContext.ofMsg(String.format("群【%d】已经添加成功", groupId));
     }
 
-    public PluginServiceContext delGroup(Long botId, Long groupId) {
-        PluginServiceContext context = new PluginServiceContext();
+    public BotContext<Object> delGroup(Long botId, Long groupId) {
         BotGroupEntity botGroupEntity = botGroupDao.lambdaQuery().eq(BotGroupEntity::getGroupId, groupId).eq(BotGroupEntity::getBotId, botId).eq(BotGroupEntity::getDelFlag, DelFlagEnum.NOT_DELETED.getCode()).one();
         if (null != botGroupEntity) {
             botGroupEntity.setDelFlag(DelFlagEnum.DELETED.getCode());
             botGroupDao.updateById(botGroupEntity);
-            return context.setMsg(String.format("群【%d】已经删除成功", groupId));
+            return BotContext.ofMsg(String.format("群【%d】已经删除成功", groupId));
         } else {
-            return context.setMsg(String.format("群【%d】还未添加", groupId));
+            return BotContext.ofMsg(String.format("群【%d】还未添加", groupId));
         }
     }
 

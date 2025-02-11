@@ -12,6 +12,5 @@ import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
  * @since 2025-01-04
  */
 public interface BotGroupDao extends IService<BotGroupEntity> {
-
     boolean isGroupManager(Long userId, Long groupId);
 }

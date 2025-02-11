@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PermissionAspect {
 
-    private final BotGroupDao botGroupService;
+    private final BotGroupDao botGroupDao;
 
     @Around(value = "@annotation(permission)", argNames = "point,permission")
     public Object doBefore(ProceedingJoinPoint point, Permission permission) throws Throwable {
@@ -45,7 +45,7 @@ public class PermissionAspect {
         if (permission.checkUser() && !PluginConfig.SUPERVISORS.contains(adapter.getUserId())) {
             return null;
         }
-        if (permission.checkGroup() && !botGroupService.isGroupManager(adapter.getBotId(), adapter.getGroupId())) {
+        if (permission.checkGroup() && !botGroupDao.isGroupManager(adapter.getBotId(), adapter.getGroupId())) {
             return null;
         }
         // 插件名称

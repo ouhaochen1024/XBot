@@ -9,7 +9,7 @@ import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
 import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
-import com.ouhaochen.bot.xbot.core.context.PluginServiceContext;
+import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class GroupManagePlugin {
     @MessageHandlerFilter(cmd = "^添加入群关键词\\s(.*)?$")
     public void addGroupKeyword(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
-        PluginServiceContext context = groupManagePluginService.addGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
+        BotContext<Object> context = groupManagePluginService.addGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
         ActionUtil.sendResponse(bot, event, context);
     }
 
@@ -40,14 +40,14 @@ public class GroupManagePlugin {
     @MessageHandlerFilter(cmd = "^删除入群关键词\\s(.*)?$")
     public void delGroupKeyword(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
-        PluginServiceContext context = groupManagePluginService.delGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
+        BotContext<Object> context = groupManagePluginService.delGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
         ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkUser = false)
     @GroupAddRequestHandler
     public void handleAddGroup(Bot bot, GroupAddRequestEvent event){
-        PluginServiceContext context = groupManagePluginService.handleAddGroup(bot.getSelfId(), event.getUserId(), event.getGroupId(), event.getComment());
+        BotContext<Object> context = groupManagePluginService.handleAddGroup(bot.getSelfId(), event.getUserId(), event.getGroupId(), event.getComment());
         ActionUtil.handleGroupAdd(bot, event.getFlag(), event.getSubType(), context.getApprove(), context.getApproveReason());
         if (context.getApprove()) {
             ThreadUtil.sleep(1000);
