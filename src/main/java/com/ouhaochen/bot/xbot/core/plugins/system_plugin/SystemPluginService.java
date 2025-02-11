@@ -30,7 +30,7 @@ public class SystemPluginService {
     private final RedisTemplateClient redisTemplateClient;
 
     public BotContext<Object> enablePlugin(Long botId, String pluginName) {
-        if (pluginName == null || CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
+        if (pluginName == null || CommonUtil.getAllSystemPluginNames(basePackage).contains(pluginName)) return null;
         if (checkPluginNotExist(pluginName)) {
             return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
@@ -40,7 +40,7 @@ public class SystemPluginService {
     }
 
     public BotContext<Object> disablePlugin(Long botId, String pluginName) {
-        if (pluginName == null || CommonUtil.getPluginExclude(basePackage).contains(pluginName)) return null;
+        if (pluginName == null || CommonUtil.getAllSystemPluginNames(basePackage).contains(pluginName)) return null;
         if (checkPluginNotExist(pluginName)) {
             return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
@@ -67,7 +67,7 @@ public class SystemPluginService {
             }
         }
         //正式查询状态
-        for (String exclude : CommonUtil.getPluginExclude(basePackage)) {
+        for (String exclude : CommonUtil.getAllSystemPluginNames(basePackage)) {
             pluginStatusMap.remove(exclude);
             pluginList.remove(exclude);
         }

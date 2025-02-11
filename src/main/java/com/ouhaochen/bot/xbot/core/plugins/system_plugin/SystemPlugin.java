@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 @Shiro
 @Component
 @RequiredArgsConstructor
-@Plugin(name = "系统插件", author = "ouhaochen", description = "XBot系统插件", exclude = true)
+@Plugin(name = "系统插件", author = "ouhaochen", description = "XBot系统插件", system = true)
 public class SystemPlugin {
 
     private final SystemPluginService systemPluginService;

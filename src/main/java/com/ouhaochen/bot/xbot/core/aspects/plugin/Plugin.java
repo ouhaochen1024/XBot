@@ -33,5 +33,5 @@ public @interface Plugin {
     /**
      * 该插件是否排除插件管理查询
      */
-    boolean exclude() default false;
+    boolean system() default false;
 }

@@ -55,15 +55,15 @@ public final class CommonUtil {
                 .collect(Collectors.toSet());
     }
 
-    //获取被排除插件类的插件名称
-    public static Set<String> getAllExcludePluginNames(String basePackage) {
+    //获取系统内置插件类的插件名称
+    public static Set<String> getAllSystemPluginNames(String basePackage) {
         Set<String> pluginExclude = new HashSet<>();
         getAllPluginClassNames(basePackage)
                 .forEach(className -> {
                     try {
                         Class<?> clazz = Class.forName(className);
                         Plugin pluginAnnotation = clazz.getAnnotation(Plugin.class);
-                        if (pluginAnnotation != null && pluginAnnotation.exclude()) {
+                        if (pluginAnnotation != null && pluginAnnotation.system()) {
                             pluginExclude.add(getPluginName(clazz));
                         }
                     } catch (ClassNotFoundException ignored) {
