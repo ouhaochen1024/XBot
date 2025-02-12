@@ -1,6 +1,7 @@
 package com.ouhaochen.bot.xbot.extra.plugins.onmyoji_plugin;
 
 import lombok.Data;
+import org.dromara.hutool.json.JSONUtil;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class Response {
         private Long deleteTime;
         private Long createTime;
         private Long updateTime;
+        public void setContentPO() {
+            this.contentPO = JSONUtil.toBean(this.content, Response.Content.class);
+        }
     }
 
     @Data
