@@ -165,12 +165,12 @@ public class RedisTemplateClient {
         }
     }
 
-    public void deleteHash(final String key,final String... hashKey) {
+    public void deleteHash(final String key,final Object... hashKey) {
         if (StrUtil.isBlank(key)) {
             return;
         }
         try {
-            redisTemplate.opsForHash().delete(key, Arrays.toString(hashKey));
+            redisTemplate.opsForHash().delete(key, hashKey);
         } catch (Exception e) {
             throw new RuntimeException("操作缓存失败", e);
         }

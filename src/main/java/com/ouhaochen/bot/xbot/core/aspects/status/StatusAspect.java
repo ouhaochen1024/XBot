@@ -27,17 +27,17 @@ public class StatusAspect {
     private List<String> active;
     private final RedisTemplateClient redisTemplateClient;
 
-    @Pointcut("execution(* com.ouhaochen.bot.xbot.core.plugins..*.*(..))")
+    @Pointcut("@annotation(com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin)")
     public void plugins() {
     }
 
-    @Around("plugins()")
+    @Around(value = "plugins()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         // if (!active.contains("prod")) return point.proceed();
         Object[] args = point.getArgs();
         Bot bot = (Bot) args[0];
         //查询名称并查找状态
-        String pluginName = CommonUtil.getPluginName(point.getTarget().getClass());
+        String pluginName = CommonUtil.getPluginInfo(point.getTarget().getClass()).getName();
         Integer status = (Integer) redisTemplateClient.getHashValue(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + bot.getSelfId(), pluginName);
         if (status == null) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY + bot.getSelfId(), pluginName, TrueOrFalseEnum.TRUE.getCode());

@@ -7,17 +7,26 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PluginStatusEnum {
     //0 禁用 1 启用
-    DISABLED("0", "0", "禁用", "\uD83D\uDD34"),
-    ENABLED("1", "1", "启用", "\uD83D\uDFE2");
+    DISABLED(0, "0", "禁用", "\uD83D\uDD34"),
+    ENABLED(1, "1", "启用", "\uD83D\uDFE2");
 
-    private final String code;
-    private final String strCode;
+    private final Integer code;
+    private final String codeStr;
     private final String status;
     private final String icon;
 
-    public static PluginStatusEnum getPluginStatusEnum(String code) {
+    public static PluginStatusEnum getPluginStatusEnum(Integer code) {
         for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
             if (pluginStatusEnum.getCode().equals(code)) {
+                return pluginStatusEnum;
+            }
+        }
+        return null;
+    }
+
+    public static PluginStatusEnum getPluginStatusEnum(String codeStr) {
+        for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
+            if (pluginStatusEnum.getCodeStr().equals(codeStr)) {
                 return pluginStatusEnum;
             }
         }
@@ -33,9 +42,27 @@ public enum PluginStatusEnum {
         return null;
     }
 
+    public static String getStatus(String codeStr) {
+        for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
+            if (pluginStatusEnum.getCodeStr().equals(codeStr)) {
+                return pluginStatusEnum.getStatus();
+            }
+        }
+        return null;
+    }
+
     public static String getIcon(Integer code) {
         for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
             if (pluginStatusEnum.getCode().equals(code)) {
+                return pluginStatusEnum.getIcon();
+            }
+        }
+        return null;
+    }
+
+    public static String getIcon(String codeStr) {
+        for (PluginStatusEnum pluginStatusEnum : PluginStatusEnum.values()) {
+            if (pluginStatusEnum.getCodeStr().equals(codeStr)) {
                 return pluginStatusEnum.getIcon();
             }
         }

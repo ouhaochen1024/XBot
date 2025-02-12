@@ -7,10 +7,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 public @interface Plugin {
     /**
-     * 插件名称(默认)
-     */
-    String value() default "";
-    /**
      * 插件名称
      */
     String name() default "";
@@ -27,7 +23,11 @@ public @interface Plugin {
      */
     String description() default "一个XBot插件";
     /**
+     * 是否默认启用
+     */
+    boolean enable() default true;
+    /**
      * 该插件是否排除插件管理查询
      */
-    boolean exclude() default false;
+    boolean system() default false;
 }

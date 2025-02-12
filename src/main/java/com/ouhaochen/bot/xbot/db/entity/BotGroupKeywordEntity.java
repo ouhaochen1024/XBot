@@ -3,13 +3,12 @@ package com.ouhaochen.bot.xbot.db.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ouhaochen.bot.xbot.db.entity.BaseEntity;
-
-import java.io.Serial;
-import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * <p>

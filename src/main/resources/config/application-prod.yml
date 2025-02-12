@@ -37,5 +37,5 @@ mybatis-plus:
     db-config:
       schema: prod
 
-redis:
-  enabled: true
+plugin-loader:
+  enabled: false

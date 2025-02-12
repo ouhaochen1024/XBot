@@ -7,12 +7,12 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 public @interface Permission {
     /**
-     * 是否检查用户机器人所有权
+     * 是否检查当前用户是否为机器人的管理者
      */
     boolean checkUser() default true;
 
     /**
-     * 是否检查该群在管理名单里面
+     * 是否检查当前QQ群是否有权限使用机器人
      */
     boolean checkGroup() default true;
 }
