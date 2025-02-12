@@ -10,6 +10,7 @@ import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
 import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
+import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
 import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.regex.Matcher;
 @Shiro
 @Component
 @RequiredArgsConstructor
-@Plugin(name = "群聊管理", author = "ouhaochen", description = "XBot群聊管理插件")
+@Plugin(name = "群聊管理", author = "ouhaochen", description = "XBot群聊管理插件", type = PluginTypeEnum.GROUP)
 public class GroupManagePlugin {
 
     private final GroupManagePluginService groupManagePluginService;

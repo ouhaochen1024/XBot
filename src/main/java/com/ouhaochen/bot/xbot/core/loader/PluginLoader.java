@@ -5,6 +5,7 @@ import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.commons.utils.StreamUtil;
 import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
+import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
 import com.ouhaochen.bot.xbot.core.info.PluginInfo;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
 import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
@@ -23,8 +24,6 @@ public class PluginLoader {
 
     @Value("${plugin-loader.enabled}")
     private boolean enabled;
-    @Value("${xbot.plugins.basePackage}")
-    private String basePackage;
     private final BotGroupDao botGroupDao;
     private final RedisTemplateClient redisTemplateClient;
 
@@ -33,36 +32,60 @@ public class PluginLoader {
         if (!enabled) {
             return;
         }
-        List<PluginInfo> pluginInfos = CommonUtil.getAllPluginInfos(basePackage);
+        List<PluginInfo> pluginInfos = CommonUtil.getAllPluginInfos();
+        List<PluginInfo> groupPluginInfos = pluginInfos.stream()
+                .filter(pluginInfo -> !pluginInfo.getType().equals(PluginTypeEnum.PRIVATE.getCode()))
+                .toList();
+        List<PluginInfo> privatePluginInfos = pluginInfos.stream()
+                .filter(pluginInfo -> !pluginInfo.getType().equals(PluginTypeEnum.GROUP.getCode()))
+                .toList();
         List<String> pluginNames = StreamUtil.mapping(pluginInfos, PluginInfo::getName);
-        //更新全部插件信息缓存
-        redisTemplateClient.delete(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY);
-        pluginInfos.forEach(pluginInfo -> {
-            redisTemplateClient.putSet(XBotRedisConstantKey.X_BOT_PLUGINS_LIST_SET_KEY, pluginInfo);
-            //查询全部机器人群组关系
-        });
+        List<String> groupPluginNames = StreamUtil.mapping(groupPluginInfos, PluginInfo::getName);
+        List<String> privatePluginNames = StreamUtil.mapping(privatePluginInfos, PluginInfo::getName);
+        //查询全部机器人群组关系
         List<BotGroupEntity> botGroupEntities = botGroupDao.lambdaQuery().eq(BotGroupEntity::getDelFlag, DelFlagEnum.NOT_DELETED.getCode()).list();
-        //更新插件状态缓存
+        //更新群插件状态缓存
         botGroupEntities.forEach(botGroupEntity -> {
-            String pluginStatusKey = XBotRedisConstantKey.X_BOT_PLUGIN_STATUS_HASH_KEY(botGroupEntity.getBotId(), botGroupEntity.getGroupId());
+            String groupPluginStatusKey = XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botGroupEntity.getBotId(), botGroupEntity.getGroupId());
             //如果没有则初始化
-            if (!redisTemplateClient.hasKey(pluginStatusKey)) {
-                pluginInfos.forEach(pluginInfo -> {
-                    redisTemplateClient.putHash(pluginStatusKey, pluginInfo.getName(), pluginInfo.getEnable() ? PluginStatusEnum.ENABLED.getCode() : PluginStatusEnum.DISABLED.getCode());
+            if (!redisTemplateClient.hasKey(groupPluginStatusKey)) {
+                groupPluginInfos.forEach(pluginInfo -> {
+                    redisTemplateClient.putHash(groupPluginStatusKey, pluginInfo.getName(), pluginInfo.getEnable() ? PluginStatusEnum.ENABLED.getCode() : PluginStatusEnum.DISABLED.getCode());
                 });
                 //更新缓存
             } else {
-                Map<String, String> statusMap = redisTemplateClient.hGetAll(pluginStatusKey);
+                Map<String, String> statusMap = redisTemplateClient.hGetAll(groupPluginStatusKey);
                 //如果没有在列表里面则移除缓存
                 for (Map.Entry<String, String> entry : statusMap.entrySet()) {
-                    if (!pluginNames.contains(entry.getKey())) {
-                        redisTemplateClient.deleteHash(pluginStatusKey, entry.getKey());
+                    if (!groupPluginNames.contains(entry.getKey())) {
+                        redisTemplateClient.deleteHash(groupPluginStatusKey, entry.getKey());
                     }
                 }
                 //添加新插件
-                for (PluginInfo pluginInfo : pluginInfos) {
+                for (PluginInfo pluginInfo : groupPluginInfos) {
                     if (!statusMap.containsKey(pluginInfo.getName())) {
-                        redisTemplateClient.putHash(pluginStatusKey, pluginInfo.getName(), pluginInfo.getEnable() ? PluginStatusEnum.ENABLED.getCode() : PluginStatusEnum.DISABLED.getCode());
+                        redisTemplateClient.putHash(groupPluginStatusKey, pluginInfo.getName(), pluginInfo.getEnable() ? PluginStatusEnum.ENABLED.getCode() : PluginStatusEnum.DISABLED.getCode());
+                    }
+                }
+            }
+        });
+        //更新私聊插件状态缓存
+        botGroupEntities.forEach(botGroupEntity -> {
+            String privatePluginStatusKey = XBotRedisConstantKey.X_BOT_PRIVATE_PLUGIN_STATUS_HASH_KEY + botGroupEntity.getBotId();
+            if (!redisTemplateClient.hasKey(privatePluginStatusKey)) {
+                privatePluginInfos.forEach(pluginInfo -> {
+                    redisTemplateClient.putHash(privatePluginStatusKey, pluginInfo.getName(), pluginInfo.getEnable() ? PluginStatusEnum.ENABLED.getCode() : PluginStatusEnum.DISABLED.getCode());
+                });
+            } else {
+                Map<String, String> statusMap = redisTemplateClient.hGetAll(privatePluginStatusKey);
+                for (Map.Entry<String, String> entry : statusMap.entrySet()) {
+                    if (!privatePluginNames.contains(entry.getKey())) {
+                        redisTemplateClient.deleteHash(privatePluginStatusKey, entry.getKey());
+                    }
+                }
+                for (PluginInfo pluginInfo : privatePluginInfos) {
+                    if (!statusMap.containsKey(pluginInfo.getName())) {
+                        redisTemplateClient.putHash(privatePluginStatusKey, pluginInfo.getName(), pluginInfo.getEnable() ? PluginStatusEnum.ENABLED.getCode() : PluginStatusEnum.DISABLED.getCode());
                     }
                 }
             }
