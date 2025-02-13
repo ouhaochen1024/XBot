@@ -8,6 +8,10 @@ plugins {
 group = "com.ouhaochen.bot"
 version = "0.0.1-SNAPSHOT"
 
+tasks.bootJar {
+    archiveFileName.set("xbot.jar")
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
