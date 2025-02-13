@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.extra.plugins.onmyoji_plugin;
+package com.ouhaochen.bot.xbot.extra.plugins.onmyoji;
 
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.json.JSONUtil;

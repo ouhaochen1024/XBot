@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.plugins.group_manage_plugin;
+package com.ouhaochen.bot.xbot.core.plugins.group_manage;
 
 import com.mikuac.shiro.annotation.GroupAddRequestHandler;
 import com.mikuac.shiro.annotation.GroupMessageHandler;

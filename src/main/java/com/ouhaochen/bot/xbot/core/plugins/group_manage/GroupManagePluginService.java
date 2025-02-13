@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.plugins.group_manage_plugin;
+package com.ouhaochen.bot.xbot.core.plugins.group_manage;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mikuac.shiro.common.utils.MsgUtils;

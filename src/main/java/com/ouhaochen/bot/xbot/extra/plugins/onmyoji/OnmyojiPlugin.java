@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.extra.plugins.onmyoji_plugin;
+package com.ouhaochen.bot.xbot.extra.plugins.onmyoji;
 
 import com.ouhaochen.bot.xbot.commons.enums.DelFlagEnum;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
