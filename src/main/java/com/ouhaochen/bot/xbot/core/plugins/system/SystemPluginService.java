@@ -38,9 +38,9 @@ public class SystemPluginService {
         // 判断类型
         if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (groupId == null && PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) || (groupId != null && PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()))) {
             return new BotContext<>(null);
-        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) {
+        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType()) || (PluginTypeEnum.COMMON.getCode().equals(pluginInfo.getType()) && groupId != null)) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId), pluginName, PluginStatusEnum.ENABLED.getCode());
-        } else if (PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType())) {
+        } else {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PRIVATE_PLUGIN_STATUS_HASH_KEY + botId, pluginName, PluginStatusEnum.ENABLED.getCode());
         }
         return BotContext.ofMsg(String.format("插件【%s】已启用", pluginName));
@@ -53,11 +53,11 @@ public class SystemPluginService {
             return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
         // 判断类型
-        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (groupId == null && PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) || (groupId != null && PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()))) {
+        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType()) && groupId == null) || (PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()) && groupId != null)) {
             return new BotContext<>(null);
-        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) {
+        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType()) || (PluginTypeEnum.COMMON.getCode().equals(pluginInfo.getType()) && groupId != null)) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId), pluginName, PluginStatusEnum.DISABLED.getCode());
-        } else if (PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType())) {
+        } else {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PRIVATE_PLUGIN_STATUS_HASH_KEY + botId, pluginName, PluginStatusEnum.DISABLED.getCode());
         }
         return BotContext.ofMsg(String.format("插件【%s】已禁用", pluginName));
