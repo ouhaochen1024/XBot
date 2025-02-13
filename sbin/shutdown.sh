@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ##!/usr/bin/env bash
 # ======================================================================
 # Linux/OSX shurtdown script
@@ -16,7 +16,7 @@ esac
 cd $(dirname $0)/..
 DIR_HOME="${PWD}"
 
-source ${DIR_HOME}/bin/env.sh
+source ${DIR_HOME}/sbin/env.sh
 
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java

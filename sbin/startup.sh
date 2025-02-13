@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ##!/usr/bin/env bash
 # ======================================================================
 # Linux/OSX startup script
@@ -17,12 +17,13 @@ esac
 cd $(dirname $0)/..
 DIR_HOME="${PWD}"
 
-source ${DIR_HOME}/bin/env.sh
+. ${DIR_HOME}/sbin/env.sh
 
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/local/java
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/opt/java
+[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/java
 [ ! -e "$JAVA_HOME/bin/java" ] && unset JAVA_HOME
 
 if [ -z "$JAVA_HOME" ]; then
@@ -55,7 +56,7 @@ else
   LOOPS=0
   while(true)
   do
-    PID=`ps -ef | grep -i ${RUN_NAME} | grep -i ${DIR_TARGET} | grep java | grep -v grep | awk '{print $2}'`
+    PID=$(pgrep -f "${RUN_NAME}.*${DIR_TARGET}" 2>/dev/null)
 
     if [ -z "$PID" ]; then
       echo "Shutdown successful! Cost $LOOPS seconds."
@@ -64,11 +65,11 @@ else
     #judge time out
     if [ "$LOOPS" -gt 180 ]; then
         echo "Stop server cost time over 180 seconds. Now force stop it."
-        kill -9 $PID && echo "Force stop successful."
+        kill -9 "$PID" && echo "Force stop successful."
         break;
     fi
 
-    let LOOPS=LOOPS+1
+    LOOPS=$((LOOPS + 1))
     sleep 1
   done
 fi
@@ -109,7 +110,7 @@ echo "#####################################################################"
 echo "#####################################################################################" >> ${DIR_LOGS}/start.out 2>&1 &
 echo "${JAVA} ${SW_AGENT_OPTS} ${BASH_OPTS} ${JVM_OPTS} ${JAR_D_OPTS} ${JAR_OPTS} ${SPRING_OPTS} ${RUN_NAME}" >> ${DIR_LOGS}/start.out 2>&1 &
 echo "#####################################################################################" >> ${DIR_LOGS}/start.out 2>&1 &
-if [ "$1" == "hup" ]; then
+if [ "$1" = "hup" ]; then
   ${JAVA} ${SW_AGENT_OPTS} ${BASH_OPTS} ${JVM_OPTS} ${JAR_D_OPTS} ${JAR_OPTS} ${SPRING_OPTS} ${RUN_NAME}  >> ${DIR_LOGS}/start.out 2>&1
 else
   nohup ${JAVA} ${SW_AGENT_OPTS} ${BASH_OPTS} ${JVM_OPTS} ${JAR_D_OPTS} ${JAR_OPTS} ${SPRING_OPTS} ${RUN_NAME}  >> ${DIR_LOGS}/start.out 2>&1 &
