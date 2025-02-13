@@ -6,7 +6,6 @@ import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.hutool.json.JSONUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

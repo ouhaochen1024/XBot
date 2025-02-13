@@ -10,11 +10,11 @@ import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
 import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
 import com.ouhaochen.bot.xbot.core.info.PluginInfo;
+import com.ouhaochen.bot.xbot.core.loader.PluginLoader;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
 import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -26,6 +26,7 @@ import java.util.Map;
 public class SystemPluginService {
 
     private final BotGroupDao botGroupDao;
+    private final PluginLoader pluginLoader;
     private final RedisTemplateClient redisTemplateClient;
 
     public BotContext<Object> enablePlugin(Long botId, Long groupId, String pluginName) {
@@ -91,8 +92,10 @@ public class SystemPluginService {
         if (isExist) {
             return BotContext.ofMsg(String.format("群【%d】已经添加过了", groupId));
         }
-        // 入库
+        // 关系入库
         botGroupDao.save(new BotGroupEntity().setGroupId(groupId).setBotId(botId));
+        // 重新加载插件
+        pluginLoader.loadPlugins();
         return BotContext.ofMsg(String.format("群【%d】已经添加成功", groupId));
     }
 
@@ -101,6 +104,8 @@ public class SystemPluginService {
         if (null != botGroupEntity) {
             botGroupEntity.setDelFlag(DelFlagEnum.DELETED.getCode());
             botGroupDao.updateById(botGroupEntity);
+            // 重新加载插件
+            pluginLoader.loadPlugins();
             return BotContext.ofMsg(String.format("群【%d】已经删除成功", groupId));
         } else {
             return BotContext.ofMsg(String.format("群【%d】还未添加", groupId));

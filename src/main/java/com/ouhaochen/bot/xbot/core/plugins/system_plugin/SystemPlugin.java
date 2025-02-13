@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.regex.Matcher;
 
-@Shiro
-@Component
 @RequiredArgsConstructor
 @Plugin(name = "系统插件", author = "ouhaochen", description = "XBot系统插件", type = PluginTypeEnum.SYSTEM)
 public class SystemPlugin {

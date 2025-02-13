@@ -1,9 +1,13 @@
 package com.ouhaochen.bot.xbot.core.aspects.plugin;
 
+import com.mikuac.shiro.annotation.common.Shiro;
 import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
+import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
+@Shiro
+@Component
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
