@@ -37,7 +37,7 @@ public class OnmyojiPlugin {
 
 
     //task任务爬取
-    //@Async("myThreadPool")
+    @Async("myThreadPool")
     @Scheduled(cron = "0/30 * * * * ?")
     public void getOfficialFeeds() {
         BotContext<Response> context = onmyojiPluginService.getOfficialFeeds();

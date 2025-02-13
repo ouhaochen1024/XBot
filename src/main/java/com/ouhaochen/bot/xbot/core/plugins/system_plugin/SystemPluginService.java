@@ -37,7 +37,7 @@ public class SystemPluginService {
             return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
         // 判断类型
-        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType())) {
+        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (groupId == null && PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) || (groupId != null && PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()))) {
             return new BotContext<>(null);
         } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId), pluginName, PluginStatusEnum.ENABLED.getCode());
@@ -54,7 +54,7 @@ public class SystemPluginService {
             return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
         // 判断类型
-        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType())) {
+        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (groupId == null && PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) || (groupId != null && PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()))) {
             return new BotContext<>(null);
         } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId), pluginName, PluginStatusEnum.DISABLED.getCode());
@@ -76,12 +76,7 @@ public class SystemPluginService {
             pluginStatusMap.remove(systemPluginName);
         }
         //转换成<PluginInfo>对象 list key为name value为status
-        List<PluginInfo> pluginInfoList = pluginStatusMap.entrySet().stream()
-                .map(entry -> PluginInfo.builder().name(entry.getKey()).status(Integer.valueOf(entry.getValue())).build())
-                .sorted(Comparator.comparing((PluginInfo info) -> Integer.parseInt(String.valueOf(info.getStatus())))
-                        .reversed()
-                        .thenComparing(PluginInfo::getName))
-                .toList();
+        List<PluginInfo> pluginInfoList = pluginStatusMap.entrySet().stream().map(entry -> PluginInfo.builder().name(entry.getKey()).status(Integer.valueOf(entry.getValue())).build()).sorted(Comparator.comparing((PluginInfo info) -> Integer.parseInt(String.valueOf(info.getStatus()))).reversed().thenComparing(PluginInfo::getName)).toList();
         //构建消息
         MsgUtils msgUtils = MsgUtils.builder().text("〓 插件列表 〓" + "\n");
         for (PluginInfo pluginInfo : pluginInfoList) {

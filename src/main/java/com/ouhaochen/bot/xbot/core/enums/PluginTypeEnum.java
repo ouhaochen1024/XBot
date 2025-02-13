@@ -9,7 +9,8 @@ public enum PluginTypeEnum {
     //系统 群聊 私聊 通用
     SYSTEM(0, "系统"),
     GROUP(1, "群聊"),
-    PRIVATE(2, "私聊");
+    PRIVATE(2, "私聊"),
+    COMMON(3, "通用");
 
     private final Integer code;
     private final String type;

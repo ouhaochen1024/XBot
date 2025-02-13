@@ -1,6 +1,7 @@
 package com.ouhaochen.bot.xbot.extra.plugins.onmyoji_plugin;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
+import com.ouhaochen.bot.xbot.commons.enums.TrueOrFalseEnum;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +41,16 @@ public class OnmyojiPluginService {
                         }
                     }
                     String msg = msgUtil.build();
-                    redisTemplateClient.set(ONMYOJI_OFFICIAL_FEED_KEY + leastFeed.getId(), "1", 31, TimeUnit.DAYS);
-                    redisTemplateClient.set(ONMYOJI_OFFICIAL_FEED_DELAY_KEY, "1", 5, TimeUnit.MINUTES);
+                    redisTemplateClient.set(ONMYOJI_OFFICIAL_FEED_KEY + leastFeed.getId(), TrueOrFalseEnum.TRUE.getCode(), 31, TimeUnit.DAYS);
+                    redisTemplateClient.set(ONMYOJI_OFFICIAL_FEED_DELAY_KEY, TrueOrFalseEnum.TRUE.getCode(), 5, TimeUnit.MINUTES);
                     return BotContext.ofData(msg, response);
+                } else {
+                    redisTemplateClient.set(ONMYOJI_OFFICIAL_FEED_DELAY_KEY, TrueOrFalseEnum.TRUE.getCode(), 5, TimeUnit.MINUTES);
                 }
             }
         } catch (Exception e) {
             log.error("获取阴阳师官方动态失败，将延迟2小时执行", e);
-            redisTemplateClient.set(ONMYOJI_OFFICIAL_FEED_DELAY_KEY, "1", 2, TimeUnit.HOURS);
+            redisTemplateClient.set(ONMYOJI_OFFICIAL_FEED_DELAY_KEY, TrueOrFalseEnum.TRUE.getCode(), 2, TimeUnit.HOURS);
         }
         return new BotContext<>(null);
     }

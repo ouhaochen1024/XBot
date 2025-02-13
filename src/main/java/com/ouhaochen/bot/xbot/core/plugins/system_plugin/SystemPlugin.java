@@ -47,7 +47,7 @@ public class SystemPlugin {
     }
 
     @Permission(checkGroup = false)
-    @GroupMessageHandler
+    @AnyMessageHandler
     @MessageHandlerFilter(cmd = "插件列表")
     public void viewPlugins(Bot bot, AnyMessageEvent event) {
         BotContext<List<PluginInfo>> context = systemPluginService.viewPlugins(bot.getSelfId(), event.getGroupId());
