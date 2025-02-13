@@ -25,8 +25,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SystemPluginService {
 
-    @Value("${xbot.plugins.basePackage}")
-    private String basePackage;
     private final BotGroupDao botGroupDao;
     private final RedisTemplateClient redisTemplateClient;
 
