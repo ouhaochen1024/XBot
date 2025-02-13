@@ -1,6 +1,8 @@
 package com.ouhaochen.bot.xbot.core.utils;
 
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
+import com.ouhaochen.bot.xbot.core.config.PluginConfig;
+import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
 import com.ouhaochen.bot.xbot.core.info.PluginInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.text.StrUtil;
@@ -15,8 +17,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public final class CommonUtil {
 
+    private static final String basePackage = PluginConfig.BASE_PACKAGE;
+
     //获取所有带有@Plugin注解的类
-    public static List<Class<?>> getAllPluginClasses(String basePackage) {
+    public static List<Class<?>> getAllPluginClasses() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(Plugin.class));
         return scanner.findCandidateComponents(basePackage)
@@ -42,7 +46,7 @@ public final class CommonUtil {
                     .author(pluginAnnotation.author())
                     .version(pluginAnnotation.version())
                     .description(pluginAnnotation.description())
-                    .system(pluginAnnotation.system())
+                    .type(pluginAnnotation.type().getCode())
                     .enable(pluginAnnotation.enable())
                     .build();
         } else {
@@ -50,9 +54,17 @@ public final class CommonUtil {
         }
     }
 
+    public static PluginInfo getPluginInfo(String pluginName) {
+        List<PluginInfo> pluginInfos = getAllPluginInfos();
+        return pluginInfos.stream()
+                .filter(pluginInfo -> pluginInfo.getName().equals(pluginName))
+                .findFirst()
+                .orElse(null);
+    }
+
     //获取所有插件类的插件名称
-    public static List<PluginInfo> getAllPluginInfos(String basePackage) {
-        return getAllPluginClasses(basePackage)
+    public static List<PluginInfo> getAllPluginInfos() {
+        return getAllPluginClasses()
                 .stream()
                 .map(CommonUtil::getPluginInfo)
                 .filter(Objects::nonNull)
@@ -60,16 +72,16 @@ public final class CommonUtil {
     }
 
     //获取系统内置插件类的插件信息
-    public static List<PluginInfo> getAllSystemPluginInfos(String basePackage) {
-        return getAllPluginInfos(basePackage)
+    public static List<PluginInfo> getAllSystemPluginInfos() {
+        return getAllPluginInfos()
                 .stream()
-                .filter(PluginInfo::getSystem)
+                .filter(pluginInfo -> pluginInfo.getType().equals(PluginTypeEnum.SYSTEM.getCode()))
                 .collect(Collectors.toList());
     }
 
     //获取自启动插件类的插件名称
-    public static List<PluginInfo> getAllEnablePluginInfos(String basePackage) {
-        return getAllPluginInfos(basePackage)
+    public static List<PluginInfo> getAllEnablePluginInfos() {
+        return getAllPluginInfos()
                 .stream()
                 .filter(PluginInfo::getEnable)
                 .collect(Collectors.toList());

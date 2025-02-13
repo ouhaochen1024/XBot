@@ -38,4 +38,4 @@ mybatis-plus:
       schema: prod
 
 plugin-loader:
-  enabled: false
+  enabled: true

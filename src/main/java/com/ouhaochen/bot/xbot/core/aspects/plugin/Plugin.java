@@ -1,5 +1,7 @@
 package com.ouhaochen.bot.xbot.core.aspects.plugin;
 
+import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
+
 import java.lang.annotation.*;
 
 @Documented
@@ -27,7 +29,7 @@ public @interface Plugin {
      */
     boolean enable() default true;
     /**
-     * 该插件是否排除插件管理查询
+     * 插件类型
      */
-    boolean system() default false;
+    PluginTypeEnum type() default PluginTypeEnum.SYSTEM;
 }

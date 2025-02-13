@@ -10,6 +10,7 @@ import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.ouhaochen.bot.xbot.core.aspects.permission.Permission;
 import com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
+import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
 import com.ouhaochen.bot.xbot.core.info.PluginInfo;
 import com.ouhaochen.bot.xbot.core.utils.ActionUtil;
 import com.ouhaochen.bot.xbot.core.utils.MatcherUtil;
@@ -22,33 +23,33 @@ import java.util.regex.Matcher;
 @Shiro
 @Component
 @RequiredArgsConstructor
-@Plugin(name = "系统插件", author = "ouhaochen", description = "XBot系统插件", system = true)
+@Plugin(name = "系统插件", author = "ouhaochen", description = "XBot系统插件", type = PluginTypeEnum.SYSTEM)
 public class SystemPlugin {
 
     private final SystemPluginService systemPluginService;
 
     @Permission(checkGroup = false)
-    @GroupMessageHandler
+    @AnyMessageHandler
     @MessageHandlerFilter(cmd = "^(?:启用插件|启用)\\s+(.*)$")
-    public void enablePlugin(Bot bot, GroupMessageEvent event, Matcher matcher) {
+    public void enablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
         BotContext<Object> context = systemPluginService.enablePlugin(bot.getSelfId(), event.getGroupId(), pluginName);
         ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
-    @GroupMessageHandler
+    @AnyMessageHandler
     @MessageHandlerFilter(cmd = "^(?:禁用插件|禁用)\\s+(.*)$")
-    public void disablePlugin(Bot bot, GroupMessageEvent event, Matcher matcher) {
+    public void disablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
         BotContext<Object> context = systemPluginService.disablePlugin(bot.getSelfId(), event.getGroupId(), pluginName);
         ActionUtil.sendResponse(bot, event, context);
     }
 
     @Permission(checkGroup = false)
-    @GroupMessageHandler
+    @AnyMessageHandler
     @MessageHandlerFilter(cmd = "插件列表")
-    public void viewPlugins(Bot bot, GroupMessageEvent event) {
+    public void viewPlugins(Bot bot, AnyMessageEvent event) {
         BotContext<List<PluginInfo>> context = systemPluginService.viewPlugins(bot.getSelfId(), event.getGroupId());
         ActionUtil.sendResponse(bot, event, context);
     }
