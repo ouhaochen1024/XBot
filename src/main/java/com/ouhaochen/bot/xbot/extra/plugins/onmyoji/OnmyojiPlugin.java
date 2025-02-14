@@ -41,6 +41,7 @@ public class OnmyojiPlugin {
     @MessageHandlerFilter(cmd = "^阴阳师订阅\\s(.*)?$")
     public void subscribe(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
+        if(keyword == null) return;
         BotContext<Object> context = onmyojiPluginService.subscribe(bot.getSelfId(), event.getGroupId(), keyword);
         ActionUtil.sendResponse(bot, event, context);
     }

@@ -28,6 +28,7 @@ public class GroupManagePlugin {
     @MessageHandlerFilter(cmd = "^添加入群关键词\\s(.*)?$")
     public void addGroupKeyword(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
+        if(keyword == null) return;
         BotContext<Object> context = groupManagePluginService.addGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
         ActionUtil.sendResponse(bot, event, context);
     }
@@ -37,6 +38,7 @@ public class GroupManagePlugin {
     @MessageHandlerFilter(cmd = "^删除入群关键词\\s(.*)?$")
     public void delGroupKeyword(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
+        if(keyword == null) return;
         BotContext<Object> context = groupManagePluginService.delGroupKeyword(bot.getSelfId(), event.getGroupId(), keyword);
         ActionUtil.sendResponse(bot, event, context);
     }

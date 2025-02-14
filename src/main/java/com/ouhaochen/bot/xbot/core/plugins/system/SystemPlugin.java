@@ -29,6 +29,7 @@ public class SystemPlugin {
     @MessageHandlerFilter(cmd = "^(?:启用插件|启用)\\s+(.*)$")
     public void enablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
+        if (pluginName == null) return;
         BotContext<Object> context = systemPluginService.enablePlugin(bot.getSelfId(), event.getGroupId(), pluginName);
         ActionUtil.sendResponse(bot, event, context);
     }
@@ -38,6 +39,7 @@ public class SystemPlugin {
     @MessageHandlerFilter(cmd = "^(?:禁用插件|禁用)\\s+(.*)$")
     public void disablePlugin(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String pluginName = MatcherUtil.getNormal(bot, event, matcher);
+        if (pluginName == null) return;
         BotContext<Object> context = systemPluginService.disablePlugin(bot.getSelfId(), event.getGroupId(), pluginName);
         ActionUtil.sendResponse(bot, event, context);
     }
@@ -72,7 +74,7 @@ public class SystemPlugin {
     @MessageHandlerFilter(cmd = "^添加群\\s(.*)?$")
     public void addGroup(Bot bot, AnyMessageEvent event, Matcher matcher) {
         Number number = MatcherUtil.getNumber(bot, event, matcher);
-        if (null == number) return;
+        if (number == null) return;
         BotContext<Object> context = systemPluginService.addGroup(event.getSelfId(), number.longValue());
         ActionUtil.sendResponse(bot, event, context);
     }
@@ -82,7 +84,7 @@ public class SystemPlugin {
     @MessageHandlerFilter(cmd = "^删除群\\s(.*)?$")
     public void delGroup(Bot bot, AnyMessageEvent event, Matcher matcher) {
         Number number = MatcherUtil.getNumber(bot, event, matcher);
-        if (null == number) return;
+        if (number == null) return;
         BotContext<Object> context = systemPluginService.delGroup(event.getSelfId(), number.longValue());
         ActionUtil.sendResponse(bot, event, context);
     }
