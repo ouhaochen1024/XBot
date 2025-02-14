@@ -8,6 +8,8 @@ import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import com.ouhaochen.bot.xbot.db.mapper.BotGroupMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务实现类
@@ -27,4 +29,13 @@ public class BotGroupDaoImpl extends ServiceImpl<BotGroupMapper, BotGroupEntity>
                 .eq(BotGroupEntity::getDelFlag, DelFlagEnum.NOT_DELETED.getCode())
         );
     }
+
+    @Override
+    public List<BotGroupEntity> getAllBotGroupList() {
+        return list(new LambdaQueryWrapper<BotGroupEntity>()
+                .eq(BotGroupEntity::getDelFlag, DelFlagEnum.NOT_DELETED.getCode())
+        );
+    }
+
+
 }

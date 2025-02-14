@@ -29,8 +29,7 @@ public class PluginStatusAspect {
 
     private final RedisTemplateClient redisTemplateClient;
 
-    @Pointcut("@within(com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin) && execution(* com.ouhaochen.bot.xbot.core.plugins..*.*(..)) || " +
-            "execution(* com.ouhaochen.bot.xbot.extra.plugins..*.*(..))")
+    @Pointcut("@within(com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin) && (execution(* com.ouhaochen.bot.xbot.core.plugins..*.*(..)) || execution(* com.ouhaochen.bot.xbot.extra.plugins..*.*(..)))")
     public void plugins() {
     }
 

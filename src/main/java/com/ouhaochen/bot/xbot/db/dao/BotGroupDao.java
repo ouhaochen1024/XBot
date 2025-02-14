@@ -3,6 +3,8 @@ package com.ouhaochen.bot.xbot.db.dao;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -12,5 +14,8 @@ import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
  * @since 2025-01-04
  */
 public interface BotGroupDao extends IService<BotGroupEntity> {
+
     boolean isGroupManager(Long userId, Long groupId);
+
+    List<BotGroupEntity> getAllBotGroupList();
 }
