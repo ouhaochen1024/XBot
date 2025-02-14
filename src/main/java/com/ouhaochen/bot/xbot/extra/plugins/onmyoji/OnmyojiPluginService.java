@@ -43,11 +43,8 @@ public class OnmyojiPluginService {
     private final RedisTemplateClient redisTemplateClient;
 
     public BotContext<Feed> getFeedsTask(Long botId, Long groupId, String uid) {
-        if (redisTemplateClient.hasKey(ONMYOJI_OFFICIAL_FEED_DELAY_KEY(botId, groupId))) {
-            return new BotContext<>(null);
-        }
         try {
-            DsResponse<SomeOneFeeds> someOneFeeds = DsApi.getSomeOneFeeds1(uid);
+            DsResponse<SomeOneFeeds> someOneFeeds = DsApi.getSomeOneFeeds(uid);
             if (someOneFeeds.getCode().equals(HttpStatus.OK.value()) && !someOneFeeds.getResult().getFeeds().isEmpty()) {
                 Feed feed = someOneFeeds.getResult().getFeeds().get(0);
                 if (redisTemplateClient.hasHashKey(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), feed.getId())) {

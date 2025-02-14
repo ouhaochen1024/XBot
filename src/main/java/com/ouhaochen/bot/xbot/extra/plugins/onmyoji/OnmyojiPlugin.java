@@ -74,8 +74,8 @@ public class OnmyojiPlugin {
                             actionUtil.sendGroupResponse(botId, groupId, context);
                             ThreadUtil.sleep(10, TimeUnit.SECONDS);
                         }
+                        redisTemplateClient.set(OnmyojiPluginService.ONMYOJI_OFFICIAL_FEED_DELAY_KEY(botId, groupId), TrueOrFalseEnum.TRUE.getCode(), 5, TimeUnit.MINUTES);
                     }
-                    redisTemplateClient.set(OnmyojiPluginService.ONMYOJI_OFFICIAL_FEED_DELAY_KEY(botId, groupId), TrueOrFalseEnum.TRUE.getCode(), 5, TimeUnit.MINUTES);
                 }
             }
         });
