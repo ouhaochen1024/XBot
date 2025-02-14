@@ -44,7 +44,7 @@ public class OnmyojiPluginService {
 
     public BotContext<Object> subscribe(Long botId, Long groupId, String uid) {
         if (redisTemplateClient.hasHashKey(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(botId, groupId), uid)) {
-            return BotContext.ofMsg("该大神账号已被本群订阅");
+            return BotContext.ofMsg("本群已订阅该大神账号");
         }
         //查询该账号信息
         try {
@@ -53,7 +53,7 @@ public class OnmyojiPluginService {
             if (userInfoDsResponse.getCode().equals(HttpStatus.OK.value())) {
                 redisTemplateClient.putHash(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(botId, groupId), uid, userInfo);
                 String msg = MsgUtils.builder()
-                        .text(String.format("大神账号：【%s】订阅成功", userInfo.getUser().getNick()))
+                        .text(String.format("大神账号【%s】订阅成功", userInfo.getUser().getNick()))
                         .img(userInfo.getUser().getIcon())
                         .build();
                 return BotContext.ofMsg(msg);
@@ -61,7 +61,7 @@ public class OnmyojiPluginService {
                 return BotContext.ofMsg(userInfoDsResponse.getErrmsg());
             }
         } catch (Exception e) {
-            return BotContext.ofMsg("抓取该大神用户信息失败，请稍后重试");
+            return BotContext.ofMsg("抓取该大神用户信息时失败，请稍后重试");
         }
     }
 
@@ -69,9 +69,9 @@ public class OnmyojiPluginService {
         UserInfo userInfo = (UserInfo) redisTemplateClient.getHashValue(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId), uid);
         if (userInfo != null) {
             redisTemplateClient.deleteHash(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId), uid);
-            return BotContext.ofMsg(String.format("取消订阅大神账号：【%s】成功", userInfo.getUser().getNick()));
+            return BotContext.ofMsg(String.format("本群取消订阅大神账号【%s】成功", userInfo.getUser().getNick()));
         } else {
-            return BotContext.ofMsg("该大神账号未被本群订阅");
+            return BotContext.ofMsg("本群未订阅该大神账号");
         }
     }
 
