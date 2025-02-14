@@ -46,6 +46,25 @@ public class OnmyojiPlugin {
         ActionUtil.sendResponse(bot, event, context);
     }
 
+    @Permission
+    @GroupMessageHandler
+    @MessageHandlerFilter(cmd = "^取消阴阳师订阅\\s(.*)?$")
+    public void unsubscribe(Bot bot, GroupMessageEvent event, Matcher matcher) {
+        String keyword = MatcherUtil.getNormal(bot, event, matcher);
+        if(keyword == null) return;
+        BotContext<Object> context = onmyojiPluginService.unsubscribe(bot.getSelfId(), event.getGroupId(), keyword);
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
+    //订阅列表
+    @Permission
+    @GroupMessageHandler
+    @MessageHandlerFilter(cmd = "阴阳师订阅列表")
+    public void subscribeList(Bot bot, GroupMessageEvent event) {
+        BotContext<Object> context = onmyojiPluginService.subscribeList(bot.getSelfId(), event.getGroupId());
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
     //task任务爬取
     @Async("myThreadPool")
     @Scheduled(cron = "0/25 * * * * ?")

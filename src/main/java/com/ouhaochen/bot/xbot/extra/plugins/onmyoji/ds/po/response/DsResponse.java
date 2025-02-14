@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po;
+package com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.response;
 
 import lombok.Data;
 

@@ -2,13 +2,10 @@ package com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.api;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.Response;
-import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.DsResponse;
-import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.some_one_feeds.Feed;
+import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.response.DsResponse;
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.some_one_feeds.SomeOneFeeds;
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.userinfo.UserInfo;
 import org.dromara.hutool.http.HttpUtil;
-import org.dromara.hutool.json.JSONUtil;
 
 import java.util.HashMap;
 import java.util.Map;
