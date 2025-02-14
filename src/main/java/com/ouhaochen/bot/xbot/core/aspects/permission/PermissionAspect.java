@@ -45,13 +45,11 @@ public class PermissionAspect {
         if (permission.checkUser() && !PluginConfig.SUPERVISORS.contains(adapter.getUserId())) {
             return null;
         }
-        if (permission.checkGroup() && !botGroupDao.isGroupManager(adapter.getBotId(), adapter.getGroupId())) {
+        if (permission.checkGroup() && adapter.getGroupId() != null && !botGroupDao.isGroupManager(adapter.getBotId(), adapter.getGroupId())) {
             return null;
         }
         // 插件名称
-        String className = point.getTarget().getClass().getName();
-        String[] split = className.split("\\.");
-        String pluginName = split[split.length - 1];
+        String pluginName = point.getTarget().getClass().getSimpleName();
         // 将用户信息存入当前线程
         CurrentUserInfo currentUserInfo = new CurrentUserInfo()
                 .setBotId(adapter.getBotId())

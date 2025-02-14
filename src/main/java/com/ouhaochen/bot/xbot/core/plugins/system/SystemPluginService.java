@@ -1,4 +1,4 @@
-package com.ouhaochen.bot.xbot.core.plugins.system_plugin;
+package com.ouhaochen.bot.xbot.core.plugins.system;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mikuac.shiro.common.utils.MsgUtils;
@@ -10,11 +10,11 @@ import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
 import com.ouhaochen.bot.xbot.core.enums.PluginTypeEnum;
 import com.ouhaochen.bot.xbot.core.info.PluginInfo;
+import com.ouhaochen.bot.xbot.core.loader.PluginLoader;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
 import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import com.ouhaochen.bot.xbot.db.entity.BotGroupEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -26,6 +26,7 @@ import java.util.Map;
 public class SystemPluginService {
 
     private final BotGroupDao botGroupDao;
+    private final PluginLoader pluginLoader;
     private final RedisTemplateClient redisTemplateClient;
 
     public BotContext<Object> enablePlugin(Long botId, Long groupId, String pluginName) {
@@ -37,9 +38,9 @@ public class SystemPluginService {
         // 判断类型
         if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (groupId == null && PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) || (groupId != null && PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()))) {
             return new BotContext<>(null);
-        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) {
+        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType()) || (PluginTypeEnum.COMMON.getCode().equals(pluginInfo.getType()) && groupId != null)) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId), pluginName, PluginStatusEnum.ENABLED.getCode());
-        } else if (PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType())) {
+        } else {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PRIVATE_PLUGIN_STATUS_HASH_KEY + botId, pluginName, PluginStatusEnum.ENABLED.getCode());
         }
         return BotContext.ofMsg(String.format("插件【%s】已启用", pluginName));
@@ -52,11 +53,11 @@ public class SystemPluginService {
             return BotContext.ofMsg(String.format("插件【%s】不存在", pluginName));
         }
         // 判断类型
-        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (groupId == null && PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) || (groupId != null && PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()))) {
+        if (PluginTypeEnum.SYSTEM.getCode().equals(pluginInfo.getType()) || (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType()) && groupId == null) || (PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType()) && groupId != null)) {
             return new BotContext<>(null);
-        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType())) {
+        } else if (PluginTypeEnum.GROUP.getCode().equals(pluginInfo.getType()) || (PluginTypeEnum.COMMON.getCode().equals(pluginInfo.getType()) && groupId != null)) {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId), pluginName, PluginStatusEnum.DISABLED.getCode());
-        } else if (PluginTypeEnum.PRIVATE.getCode().equals(pluginInfo.getType())) {
+        } else {
             redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_PRIVATE_PLUGIN_STATUS_HASH_KEY + botId, pluginName, PluginStatusEnum.DISABLED.getCode());
         }
         return BotContext.ofMsg(String.format("插件【%s】已禁用", pluginName));
@@ -91,8 +92,10 @@ public class SystemPluginService {
         if (isExist) {
             return BotContext.ofMsg(String.format("群【%d】已经添加过了", groupId));
         }
-        // 入库
+        // 关系入库
         botGroupDao.save(new BotGroupEntity().setGroupId(groupId).setBotId(botId));
+        // 重新加载插件
+        pluginLoader.loadPlugins();
         return BotContext.ofMsg(String.format("群【%d】已经添加成功", groupId));
     }
 
@@ -101,6 +104,8 @@ public class SystemPluginService {
         if (null != botGroupEntity) {
             botGroupEntity.setDelFlag(DelFlagEnum.DELETED.getCode());
             botGroupDao.updateById(botGroupEntity);
+            // 重新加载插件
+            pluginLoader.loadPlugins();
             return BotContext.ofMsg(String.format("群【%d】已经删除成功", groupId));
         } else {
             return BotContext.ofMsg(String.format("群【%d】还未添加", groupId));

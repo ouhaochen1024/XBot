@@ -9,7 +9,6 @@ import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.adapters.EventAdapter;
 import com.ouhaochen.bot.xbot.core.adapters.GroupAddRequestEventAdapter;
 import com.ouhaochen.bot.xbot.core.adapters.GroupMessageEventAdapter;
-import com.ouhaochen.bot.xbot.core.adapters.PrivateMessageEventAdapter;
 import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
 import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
 import com.ouhaochen.bot.xbot.core.utils.CommonUtil;
@@ -30,8 +29,7 @@ public class PluginStatusAspect {
 
     private final RedisTemplateClient redisTemplateClient;
 
-    @Pointcut("@within(com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin) && execution(* com.ouhaochen.bot.xbot.core.plugins..*.*(..)) || " +
-            "execution(* com.ouhaochen.bot.xbot.extra.plugins..*.*(..))")
+    @Pointcut("@within(com.ouhaochen.bot.xbot.core.aspects.plugin.Plugin) && (execution(* com.ouhaochen.bot.xbot.core.plugins..*.*(..)) || execution(* com.ouhaochen.bot.xbot.extra.plugins..*.*(..)))")
     public void plugins() {
     }
 

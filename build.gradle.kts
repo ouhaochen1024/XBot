@@ -8,6 +8,10 @@ plugins {
 group = "com.ouhaochen.bot"
 version = "0.0.1-SNAPSHOT"
 
+tasks.bootJar {
+    archiveFileName.set("xbot.jar")
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -63,6 +67,12 @@ dependencies {
     //额外需要的依赖
     //qq-bot-shiro
     implementation("com.mikuac:shiro:2.3.5")
+    //fastjson2
+    implementation("com.alibaba.fastjson2:fastjson2:2.0.54")
+    //dashscope
+    implementation("com.alibaba:dashscope-sdk-java:2.18.2") {
+        exclude("org.slf4j", "slf4j-simple")
+    }
 }
 
 tasks.withType<Test> {
