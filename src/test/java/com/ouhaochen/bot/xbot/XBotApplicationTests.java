@@ -2,7 +2,6 @@ package com.ouhaochen.bot.xbot;
 
 import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.OnmyojiPluginService;
-import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.some_one_feeds.Feed;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +19,8 @@ class XBotApplicationTests {
 
 	@Test
 	void test() {
-		BotContext<Feed> someOneFeeds =  onmyojiPluginService.getFeedsTask(2260967184L, 853850788L, "21e043e2f41145ba9678f85f72a41938");
-		System.out.println(someOneFeeds);
+		BotContext<Object> subscribeList =  onmyojiPluginService.subscribeList(2260967184L, 853850788L);
+		System.out.println(subscribeList);
 	}
 
 

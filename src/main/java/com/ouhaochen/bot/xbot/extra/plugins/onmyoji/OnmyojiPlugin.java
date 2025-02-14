@@ -48,7 +48,7 @@ public class OnmyojiPlugin {
 
     @Permission
     @GroupMessageHandler
-    @MessageHandlerFilter(cmd = "^取消阴阳师订阅\\s(.*)?$")
+    @MessageHandlerFilter(cmd = "^阴阳师取消订阅\\s(.*)?$")
     public void unsubscribe(Bot bot, GroupMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
         if(keyword == null) return;
@@ -91,9 +91,9 @@ public class OnmyojiPlugin {
                         if (lock == null) {
                             return;
                         }
-                        Map<String, String> uidMap = redisTemplateClient.hGetAll(uidHashKey);
-                        for (Map.Entry<String, String> entry : uidMap.entrySet()) {
-                            BotContext<Feed> context = onmyojiPluginService.getFeedsTask(botId, groupId, entry.getKey());
+                        Map<Object, Object> uidMap = redisTemplateClient.getEntries(uidHashKey);
+                        for (Map.Entry<Object, Object> entry : uidMap.entrySet()) {
+                            BotContext<Feed> context = onmyojiPluginService.getFeedsTask(botId, groupId, (String) entry.getKey());
                             actionUtil.sendGroupResponse(botId, groupId, context);
                             ThreadUtil.sleep(10, TimeUnit.SECONDS);
                         }

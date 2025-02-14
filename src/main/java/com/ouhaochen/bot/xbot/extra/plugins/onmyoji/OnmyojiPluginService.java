@@ -1,6 +1,5 @@
 package com.ouhaochen.bot.xbot.extra.plugins.onmyoji;
 
-import com.alibaba.fastjson2.JSON;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
@@ -49,16 +48,17 @@ public class OnmyojiPluginService {
         }
         //查询该账号信息
         try {
-            DsResponse<UserInfo> userInfo = DsApi.getUserInfo(uid);
-            if (userInfo.getCode().equals(HttpStatus.OK.value())) {
+            DsResponse<UserInfo> userInfoDsResponse = DsApi.getUserInfo(uid);
+            UserInfo userInfo = userInfoDsResponse.getResult();
+            if (userInfoDsResponse.getCode().equals(HttpStatus.OK.value())) {
                 redisTemplateClient.putHash(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(botId, groupId), uid, userInfo);
                 String msg = MsgUtils.builder()
-                        .text(String.format("大神账号：【%s】订阅成功", userInfo.getResult().getUser().getNick()))
-                        .img(userInfo.getResult().getUser().getIcon())
+                        .text(String.format("大神账号：【%s】订阅成功", userInfo.getUser().getNick()))
+                        .img(userInfo.getUser().getIcon())
                         .build();
                 return BotContext.ofMsg(msg);
             } else {
-                return BotContext.ofMsg(userInfo.getErrmsg());
+                return BotContext.ofMsg(userInfoDsResponse.getErrmsg());
             }
         } catch (Exception e) {
             return BotContext.ofMsg("抓取该大神用户信息失败，请稍后重试");
@@ -76,14 +76,14 @@ public class OnmyojiPluginService {
     }
 
     public BotContext<Object> subscribeList(long selfId, Long groupId) {
-        Map<String, String> subscribeMap = redisTemplateClient.hGetAll(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId));
+        Map<Object, Object> subscribeMap = redisTemplateClient.getEntries(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId));
         if (subscribeMap.isEmpty()) {
             return BotContext.ofMsg("本群暂未订阅任何大神账号");
         } else {
             StringBuilder msg = new StringBuilder();
-            for (Map.Entry<String, String> entry : subscribeMap.entrySet()) {
-                UserInfo userInfo = JSON.parseObject(entry.getValue(), UserInfo.class);
-                msg.append(String.format("【%s】 uid：%s\n", userInfo.getUser().getNick(), userInfo.getUser().getUid()));
+            for (Map.Entry<Object, Object> entry : subscribeMap.entrySet()) {
+                UserInfo userInfo = (UserInfo) entry.getValue();
+                msg.append(String.format("【%s】\nuid：%s\n", userInfo.getUser().getNick(), userInfo.getUser().getUid()));
             }
             return BotContext.ofMsg(msg.toString());
         }

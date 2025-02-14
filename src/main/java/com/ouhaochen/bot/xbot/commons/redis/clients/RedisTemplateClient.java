@@ -2,14 +2,14 @@ package com.ouhaochen.bot.xbot.commons.redis.clients;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -184,39 +184,15 @@ public class RedisTemplateClient {
         redisTemplate.expire(key, time, timeUnit);
     }
 
-    public Map<String, String> hGetAll(final String key) {
-        return redisTemplate.execute((RedisCallback<Map<String, String>>) con -> {
-            Map<byte[], byte[]> result = con.hashCommands().hGetAll(key.getBytes());
-            if (CollUtil.isEmpty(result)) {
-                return new HashMap<>(0);
-            }
-            Map<String, String> ans = new HashMap<>(result.size());
-            for (Map.Entry<byte[], byte[]> entry : result.entrySet()) {
-                ans.put(new String(entry.getKey()), new String(entry.getValue()));
-            }
-            return ans;
-        });
-    }
-
-    public Map<String, Map<String, String>> hGetAll(final Set<String> keys) {
-        return redisTemplate.execute((RedisCallback<Map<String, Map<String, String>>>) con -> {
-            Iterator<String> it = keys.iterator();
-            Map<String, Map<String, String>> mapList = new HashMap<>();
-            while (it.hasNext()) {
-                String key = it.next();
-                Map<byte[], byte[]> result = con.hashCommands().hGetAll(key.getBytes());
-                Map<String, String> ans;
-                if (CollUtil.isEmpty(result)) {
-                    return new HashMap<>(0);
-                }
-                ans = new HashMap<>(result.size());
-                for (Map.Entry<byte[], byte[]> entry : result.entrySet()) {
-                    ans.put(new String(entry.getKey()), new String(entry.getValue()));
-                }
-                mapList.put(key, ans);
-            }
-            return mapList;
-        });
+    public Map<Object, Object> getEntries(final String key) {
+        if (StrUtil.isBlank(key)) {
+            return null;
+        }
+        try {
+            return redisTemplate.opsForHash().entries(key);
+        } catch (Exception e) {
+            throw new RuntimeException("操作缓存失败", e);
+        }
     }
 
     public void putSet(final String key, Object... value) {
