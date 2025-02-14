@@ -61,7 +61,7 @@ public class OnmyojiPluginService {
                             msgUtil.img(media.getUrl());
                         }
                         if (media.getMimeType().contains("video")) {
-                            msgUtil.video(media.getUrl(), null);
+                            msgUtil.video(media.getUrl(), "mp4");
                         }
                     }
                     redisTemplateClient.putHash(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), feed.getId(), feed);

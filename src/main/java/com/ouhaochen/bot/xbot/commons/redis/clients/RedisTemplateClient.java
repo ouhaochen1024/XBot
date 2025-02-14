@@ -9,10 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -230,6 +227,22 @@ public class RedisTemplateClient {
             redisTemplate.opsForSet().add(key, value);
         } catch (Exception e) {
             throw new RuntimeException("操作缓存失败", e);
+        }
+    }
+
+    public String tryLock(String key, long expireTime, TimeUnit timeUnit) {
+        String lockKey = "REDIS_LOCK:" + key;
+        String value = UUID.randomUUID().toString();
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(lockKey, value, expireTime, timeUnit);
+        return Boolean.TRUE.equals(result) ? value : null;
+    }
+
+    public void releaseLock(String key, String value) {
+        String lockKey = "REDIS_LOCK:" + key;
+        Object currentValue = redisTemplate.opsForValue().get(lockKey);
+        if (currentValue != null && currentValue.equals(value)) {
+            // 校验值正确，删除键并返回删除的数量
+            redisTemplate.delete(lockKey);
         }
     }
 }
