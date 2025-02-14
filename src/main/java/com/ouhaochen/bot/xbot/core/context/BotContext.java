@@ -8,6 +8,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class BotContext<T> {
     private String msg;
+    private String video;
+    private String cover;
     private Boolean approve = Boolean.FALSE;
     private String approveReason = "";
     private Boolean autoEscape = Boolean.FALSE;

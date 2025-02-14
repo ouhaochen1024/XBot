@@ -1,7 +1,6 @@
 package com.ouhaochen.bot.xbot.extra.plugins.onmyoji;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
-import com.ouhaochen.bot.xbot.commons.enums.TrueOrFalseEnum;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.api.DsApi;
@@ -50,6 +49,7 @@ public class OnmyojiPluginService {
                 if (redisTemplateClient.hasHashKey(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), feed.getId())) {
                     return new BotContext<>(null);
                 } else {
+                    BotContext<Feed> botContext = new BotContext<>(feed);
                     feed.setFeedContent();
                     FeedContent feedContent = feed.getFeedContent();
                     MsgUtils msgUtil = MsgUtils.builder()
@@ -61,12 +61,14 @@ public class OnmyojiPluginService {
                             msgUtil.img(media.getUrl());
                         }
                         if (media.getMimeType().contains("video")) {
-                            msgUtil.video(media.getUrl(), "mp4");
+                            botContext.setVideo(media.getUrl());
+                            botContext.setCover(media.getCover());
                         }
                     }
+                    botContext.setMsg(msgUtil.build());
                     redisTemplateClient.putHash(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), feed.getId(), feed);
                     redisTemplateClient.expire(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), 31, TimeUnit.DAYS);
-                    return BotContext.ofData(msgUtil.build(), feed);
+                    return botContext;
                 }
             } else {
                 log.error("获取阴阳师大神用户：{} 动态失败，错误信息：{}", uid, someOneFeeds.getErrmsg());
