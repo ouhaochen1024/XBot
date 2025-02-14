@@ -78,7 +78,7 @@ public class OnmyojiPlugin {
                             actionUtil.sendGroupResponse(botId, groupId, context);
                             ThreadUtil.sleep(10, TimeUnit.SECONDS);
                         }
-                        redisTemplateClient.releaseLock(uidHashKey, lock);
+                        redisTemplateClient.releaseLock(botId + ":" + groupId, lock);
                         redisTemplateClient.set(OnmyojiPluginService.ONMYOJI_OFFICIAL_FEED_DELAY_KEY(botId, groupId), TrueOrFalseEnum.TRUE.getCode(), 5, TimeUnit.MINUTES);
                     }
                 }
