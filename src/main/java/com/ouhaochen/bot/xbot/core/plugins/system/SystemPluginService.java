@@ -111,4 +111,20 @@ public class SystemPluginService {
             return BotContext.ofMsg(String.format("群【%d】还未添加", groupId));
         }
     }
+
+    public BotContext<Object> addBlacklist(Long selfId, Long userId) {
+        if (redisTemplateClient.hasHashKey(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY + selfId, userId.toString())) {
+            return BotContext.ofMsg(String.format("用户【%d】已经存在黑名单内", userId));
+        }
+        redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY+ selfId, userId.toString(), selfId);
+        return BotContext.ofMsg(String.format("用户【%d】已被移入黑名单", userId));
+    }
+
+    public BotContext<Object> delBlacklist(Long selfId, Long userId) {
+        if (!redisTemplateClient.hasHashKey(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY + selfId, userId.toString())) {
+            return BotContext.ofMsg(String.format("用户【%d】不存在黑名单内", userId));
+        }
+        redisTemplateClient.deleteHash(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY + selfId, userId.toString());
+        return BotContext.ofMsg(String.format("用户【%d】已被移出黑名单", userId));
+    }
 }

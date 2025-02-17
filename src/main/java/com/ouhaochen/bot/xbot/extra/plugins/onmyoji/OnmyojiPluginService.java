@@ -11,11 +11,11 @@ import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.some_one_feeds.SomeOne
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.userinfo.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -25,8 +25,8 @@ public class OnmyojiPluginService {
     private static final String ONMYOJI_OFFICIAL_FEED_DELAY_KEY = "onmyoji_official_feed_delay:";
     // 群组订阅账号
     private static final String ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY = "onmyoji_group_subscribe_uid:";
-    // 群组订阅账号已发送的动态
-    private static final String ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY = "onmyoji_group_feeds_sent_id:";
+    // 群组订阅账号已发送最后一条动态
+    private static final String ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY = "onmyoji_group_last_feeds_sent_id:";
 
     public static String ONMYOJI_OFFICIAL_FEED_DELAY_KEY(Long botId, Long groupId) {
         return ONMYOJI_OFFICIAL_FEED_DELAY_KEY + botId + ":" + groupId;
@@ -36,8 +36,8 @@ public class OnmyojiPluginService {
         return ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY + botId + ":" + groupId;
     }
 
-    public static String ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(Long botId, Long groupId) {
-        return ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY + botId + ":" + groupId;
+    public static String ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(Long botId, Long groupId) {
+        return ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY + botId + ":" + groupId;
     }
 
     private final RedisTemplateClient redisTemplateClient;
@@ -94,7 +94,8 @@ public class OnmyojiPluginService {
             DsResponse<SomeOneFeeds> someOneFeeds = DsApi.getSomeOneFeeds(uid);
             if (someOneFeeds.getCode().equals(HttpStatus.OK.value()) && !someOneFeeds.getResult().getFeeds().isEmpty()) {
                 Feed feed = someOneFeeds.getResult().getFeeds().get(0);
-                if (redisTemplateClient.hasHashKey(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), feed.getId())) {
+                String lastFeedsSentId = (String) redisTemplateClient.get(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId));
+                if (StrUtil.isNotBlank(lastFeedsSentId) && feed.getId().equals(lastFeedsSentId)) {
                     return new BotContext<>(null);
                 } else {
                     BotContext<Feed> botContext = new BotContext<>(feed);
@@ -114,8 +115,7 @@ public class OnmyojiPluginService {
                         }
                     }
                     botContext.setMsg(msgUtil.build());
-                    redisTemplateClient.putHash(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), feed.getId(), feed);
-                    redisTemplateClient.expire(ONMYOJI_GROUP_FEEDS_SENT_ID_HASH_KEY(botId, groupId), 31, TimeUnit.DAYS);
+                    redisTemplateClient.set(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId), feed.getId());
                     return botContext;
                 }
             } else {

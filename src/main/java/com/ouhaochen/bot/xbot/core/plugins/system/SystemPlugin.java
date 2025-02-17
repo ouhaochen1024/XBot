@@ -88,4 +88,24 @@ public class SystemPlugin {
         BotContext<Object> context = systemPluginService.delGroup(event.getSelfId(), number.longValue());
         ActionUtil.sendResponse(bot, event, context);
     }
+
+    @Permission(checkGroup = false)
+    @AnyMessageHandler
+    @MessageHandlerFilter(cmd = "^拉黑\\s(.*)?$")
+    public void addBlacklist(Bot bot, AnyMessageEvent event, Matcher matcher) {
+        Number number = MatcherUtil.getNumber(bot, event, matcher);
+        if (number == null) return;
+        BotContext<Object> context = systemPluginService.addBlacklist(event.getSelfId(), number.longValue());
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
+    @Permission(checkGroup = false)
+    @AnyMessageHandler
+    @MessageHandlerFilter(cmd = "^取消拉黑\\s(.*)?$")
+    public void delBlacklist(Bot bot, AnyMessageEvent event, Matcher matcher) {
+        Number number = MatcherUtil.getNumber(bot, event, matcher);
+        if (number == null) return;
+        BotContext<Object> context = systemPluginService.delBlacklist(event.getSelfId(), number.longValue());
+        ActionUtil.sendResponse(bot, event, context);
+    }
 }

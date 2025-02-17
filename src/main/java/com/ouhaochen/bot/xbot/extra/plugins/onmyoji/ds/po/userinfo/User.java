@@ -1,6 +1,5 @@
 package com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.userinfo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;

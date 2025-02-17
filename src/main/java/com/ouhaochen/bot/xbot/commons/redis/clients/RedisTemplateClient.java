@@ -2,7 +2,6 @@ package com.ouhaochen.bot.xbot.commons.redis.clients;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ public class RedisTemplateClient {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public boolean hasKey(final String key) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return false;
         }
         try {
@@ -31,7 +30,7 @@ public class RedisTemplateClient {
     }
 
     public boolean hasHashKey(String key, String hashKey) {
-        if (StrUtil.isBlank(key) || StrUtil.isBlank(hashKey)) {
+        if (key == null || key.isEmpty() || hashKey == null || hashKey.isEmpty()) {
             return false;
         }
         try {
@@ -45,7 +44,7 @@ public class RedisTemplateClient {
      * 根据key读取数据
      */
     public Object get(final String key) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return null;
         }
         try {
@@ -56,7 +55,7 @@ public class RedisTemplateClient {
     }
 
     public Set<Object> getSet(final String key) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return null;
         }
         try {
@@ -70,7 +69,7 @@ public class RedisTemplateClient {
      * 写入对象数据
      */
     public void set(final String key, Object value) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return;
         }
         try {
@@ -84,7 +83,7 @@ public class RedisTemplateClient {
      * 写入设定过期时间的数据
      */
     public boolean set(final String key, Object value, long timeout, TimeUnit unit) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return false;
         }
         try {
@@ -99,7 +98,7 @@ public class RedisTemplateClient {
      * 写入Hash对象数据 k-map
      */
     public boolean putHash(final String key, Map<String, Object> map) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return false;
         }
         try {
@@ -114,7 +113,7 @@ public class RedisTemplateClient {
      * 获得Hash对象value数据
      */
     public Object getHashValue(final String key, final String hashKey) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return null;
         }
         try {
@@ -139,7 +138,7 @@ public class RedisTemplateClient {
      * 写入带过期时间的Hash对象数据 k-map
      */
     public boolean putHash(final String key, Map<String, Object> map, long timeout, TimeUnit unit) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return false;
         }
         try {
@@ -155,7 +154,7 @@ public class RedisTemplateClient {
      * 删除
      */
     public void delete(final String key) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return;
         }
         try {
@@ -166,7 +165,7 @@ public class RedisTemplateClient {
     }
 
     public void deleteHash(final String key,final Object... hashKey) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return;
         }
         try {
@@ -185,7 +184,7 @@ public class RedisTemplateClient {
     }
 
     public Map<Object, Object> getEntries(final String key) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return null;
         }
         try {
@@ -196,7 +195,7 @@ public class RedisTemplateClient {
     }
 
     public void putSet(final String key, Object... value) {
-        if (StrUtil.isBlank(key)) {
+        if (key == null || key.isEmpty()) {
             return;
         }
         try {
