@@ -83,7 +83,7 @@ public class OnmyojiPluginService {
             StringBuilder msg = new StringBuilder();
             for (Map.Entry<Object, Object> entry : subscribeMap.entrySet()) {
                 UserInfo userInfo = (UserInfo) entry.getValue();
-                msg.append(String.format("【%s】\nuid：%s\n", userInfo.getUser().getNick(), userInfo.getUser().getUid()));
+                msg.append(String.format("【%s】%s\n", userInfo.getUser().getNick(), userInfo.getUser().getUid()));
             }
             return BotContext.ofMsg(msg.toString());
         }
