@@ -11,11 +11,11 @@ import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.some_one_feeds.SomeOne
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.userinfo.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -36,8 +36,8 @@ public class OnmyojiPluginService {
         return ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY + botId + ":" + groupId;
     }
 
-    public static String ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(Long botId, Long groupId) {
-        return ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY + botId + ":" + groupId;
+    public static String ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(Long botId, Long groupId, String uid) {
+        return ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY + botId + ":" + groupId + ":" + uid;
     }
 
     private final RedisTemplateClient redisTemplateClient;
@@ -94,8 +94,7 @@ public class OnmyojiPluginService {
             DsResponse<SomeOneFeeds> someOneFeeds = DsApi.getSomeOneFeeds(uid);
             if (someOneFeeds.getCode().equals(HttpStatus.OK.value()) && !someOneFeeds.getResult().getFeeds().isEmpty()) {
                 Feed feed = someOneFeeds.getResult().getFeeds().get(0);
-                String lastFeedsSentId = (String) redisTemplateClient.get(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId));
-                if (StrUtil.isNotBlank(lastFeedsSentId) && feed.getId().equals(lastFeedsSentId)) {
+                if (redisTemplateClient.hasKey(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, uid))) {
                     return new BotContext<>(null);
                 } else {
                     BotContext<Feed> botContext = new BotContext<>(feed);
@@ -115,7 +114,7 @@ public class OnmyojiPluginService {
                         }
                     }
                     botContext.setMsg(msgUtil.build());
-                    redisTemplateClient.set(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId), feed.getId());
+                    redisTemplateClient.set(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, uid), feed, 31, TimeUnit.DAYS);
                     return botContext;
                 }
             } else {
