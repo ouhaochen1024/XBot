@@ -15,7 +15,10 @@ public class BotContext<T> {
     private Boolean autoEscape = Boolean.FALSE;
     private T data;
 
-    // 带参构造方法
+    public BotContext(String msg) {
+        this.msg = msg;
+    }
+
     public BotContext(T data) {
         this.data = data;
     }
@@ -29,11 +32,6 @@ public class BotContext<T> {
         this.msg = msg;
         this.approve = approve;
         this.approveReason = approveReason;
-    }
-
-    // 静态工厂方法
-    public static <T> BotContext<T> ofData(T data) {
-        return new BotContext<>(data);
     }
 
     public static <T> BotContext<T> ofData(String msg, T data) {

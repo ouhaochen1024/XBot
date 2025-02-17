@@ -46,6 +46,25 @@ public class OnmyojiPlugin {
         ActionUtil.sendResponse(bot, event, context);
     }
 
+    @Permission
+    @GroupMessageHandler
+    @MessageHandlerFilter(cmd = "^阴阳师取消订阅\\s(.*)?$")
+    public void unsubscribe(Bot bot, GroupMessageEvent event, Matcher matcher) {
+        String keyword = MatcherUtil.getNormal(bot, event, matcher);
+        if(keyword == null) return;
+        BotContext<Object> context = onmyojiPluginService.unsubscribe(bot.getSelfId(), event.getGroupId(), keyword);
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
+    //订阅列表
+    @Permission
+    @GroupMessageHandler
+    @MessageHandlerFilter(cmd = "阴阳师订阅列表")
+    public void subscribeList(Bot bot, GroupMessageEvent event) {
+        BotContext<Object> context = onmyojiPluginService.subscribeList(bot.getSelfId(), event.getGroupId());
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
     //task任务爬取
     @Async("myThreadPool")
     @Scheduled(cron = "0/25 * * * * ?")
@@ -72,9 +91,9 @@ public class OnmyojiPlugin {
                         if (lock == null) {
                             return;
                         }
-                        Map<String, String> uidMap = redisTemplateClient.hGetAll(uidHashKey);
-                        for (Map.Entry<String, String> entry : uidMap.entrySet()) {
-                            BotContext<Feed> context = onmyojiPluginService.getFeedsTask(botId, groupId, entry.getKey());
+                        Map<Object, Object> uidMap = redisTemplateClient.getEntries(uidHashKey);
+                        for (Map.Entry<Object, Object> entry : uidMap.entrySet()) {
+                            BotContext<Feed> context = onmyojiPluginService.getFeedsTask(botId, groupId, (String) entry.getKey());
                             actionUtil.sendGroupResponse(botId, groupId, context);
                             ThreadUtil.sleep(10, TimeUnit.SECONDS);
                         }

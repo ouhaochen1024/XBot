@@ -54,10 +54,10 @@ public class PluginLoader {
                 });
                 //更新缓存
             } else {
-                Map<String, String> statusMap = redisTemplateClient.hGetAll(groupPluginStatusKey);
+                Map<Object, Object> statusMap = redisTemplateClient.getEntries(groupPluginStatusKey);
                 //如果没有在列表里面则移除缓存
-                for (Map.Entry<String, String> entry : statusMap.entrySet()) {
-                    if (!groupPluginNames.contains(entry.getKey())) {
+                for (Map.Entry<Object, Object> entry : statusMap.entrySet()) {
+                    if (!groupPluginNames.contains((String) entry.getKey())) {
                         redisTemplateClient.deleteHash(groupPluginStatusKey, entry.getKey());
                     }
                 }
@@ -77,9 +77,9 @@ public class PluginLoader {
                     redisTemplateClient.putHash(privatePluginStatusKey, pluginInfo.getName(), pluginInfo.getEnable() ? PluginStatusEnum.ENABLED.getCode() : PluginStatusEnum.DISABLED.getCode());
                 });
             } else {
-                Map<String, String> statusMap = redisTemplateClient.hGetAll(privatePluginStatusKey);
-                for (Map.Entry<String, String> entry : statusMap.entrySet()) {
-                    if (!privatePluginNames.contains(entry.getKey())) {
+                Map<Object, Object> statusMap = redisTemplateClient.getEntries(privatePluginStatusKey);
+                for (Map.Entry<Object, Object> entry : statusMap.entrySet()) {
+                    if (!privatePluginNames.contains((String) entry.getKey())) {
                         redisTemplateClient.deleteHash(privatePluginStatusKey, entry.getKey());
                     }
                 }

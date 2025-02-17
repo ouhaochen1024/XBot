@@ -5,6 +5,7 @@ import com.mikuac.shiro.dto.event.Event;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.dto.event.request.GroupAddRequestEvent;
+import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.commons.security.CurrentUserInfo;
 import com.ouhaochen.bot.xbot.commons.security.ThreadLocalUserInfo;
 import com.ouhaochen.bot.xbot.core.adapters.EventAdapter;
@@ -12,6 +13,7 @@ import com.ouhaochen.bot.xbot.core.adapters.GroupAddRequestEventAdapter;
 import com.ouhaochen.bot.xbot.core.adapters.GroupMessageEventAdapter;
 import com.ouhaochen.bot.xbot.core.adapters.PrivateMessageEventAdapter;
 import com.ouhaochen.bot.xbot.core.config.PluginConfig;
+import com.ouhaochen.bot.xbot.core.constant.XBotRedisConstantKey;
 import com.ouhaochen.bot.xbot.db.dao.BotGroupDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Component;
 public class PermissionAspect {
 
     private final BotGroupDao botGroupDao;
+    private final RedisTemplateClient redisTemplateClient;
 
     @Around(value = "@annotation(permission)", argNames = "point,permission")
     public Object doBefore(ProceedingJoinPoint point, Permission permission) throws Throwable {
@@ -41,6 +44,9 @@ public class PermissionAspect {
             adapter = new GroupAddRequestEventAdapter((GroupAddRequestEvent) event);
         } else {
             return point.proceed();
+        }
+        if (!PluginConfig.SUPERVISORS.contains(adapter.getUserId()) && redisTemplateClient.hasHashKey(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY + adapter.getBotId(), adapter.getUserId().toString())){
+            return null;
         }
         if (permission.checkUser() && !PluginConfig.SUPERVISORS.contains(adapter.getUserId())) {
             return null;

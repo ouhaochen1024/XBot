@@ -64,25 +64,25 @@ public class SystemPluginService {
     }
 
     public BotContext<List<PluginInfo>> viewPlugins(Long botId, Long groupId) {
-        Map<String, String> pluginStatusMap;
+        Map<Object, Object> pluginStatusMap;
         if (groupId == null) {
-            pluginStatusMap = redisTemplateClient.hGetAll(XBotRedisConstantKey.X_BOT_PRIVATE_PLUGIN_STATUS_HASH_KEY + botId);
+            pluginStatusMap = redisTemplateClient.getEntries(XBotRedisConstantKey.X_BOT_PRIVATE_PLUGIN_STATUS_HASH_KEY + botId);
         } else {
-            pluginStatusMap = redisTemplateClient.hGetAll(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId));
+            pluginStatusMap = redisTemplateClient.getEntries(XBotRedisConstantKey.X_BOT_GROUP_PLUGIN_STATUS_HASH_KEY(botId, groupId));
         }
         //去掉系统插件
         for (String systemPluginName : StreamUtil.mapping(CommonUtil.getAllSystemPluginInfos(), PluginInfo::getName)) {
             pluginStatusMap.remove(systemPluginName);
         }
         //转换成<PluginInfo>对象 list key为name value为status
-        List<PluginInfo> pluginInfoList = pluginStatusMap.entrySet().stream().map(entry -> PluginInfo.builder().name(entry.getKey()).status(Integer.valueOf(entry.getValue())).build()).sorted(Comparator.comparing((PluginInfo info) -> Integer.parseInt(String.valueOf(info.getStatus()))).reversed().thenComparing(PluginInfo::getName)).toList();
+        List<PluginInfo> pluginInfoList = pluginStatusMap.entrySet().stream().map(entry -> PluginInfo.builder().name((String) entry.getKey()).status((Integer) entry.getValue()).build()).sorted(Comparator.comparing((PluginInfo info) -> Integer.parseInt(String.valueOf(info.getStatus()))).reversed().thenComparing(PluginInfo::getName)).toList();
         //构建消息
         MsgUtils msgUtils = MsgUtils.builder().text("〓 插件列表 〓" + "\n");
         for (PluginInfo pluginInfo : pluginInfoList) {
             msgUtils.text(PluginStatusEnum.getIcon(pluginInfo.getStatus()) + "【" + pluginInfo.getName() + "】" + "\n");
         }
         //总量
-        msgUtils.text("共" + pluginStatusMap.size() + "个，启用" + pluginStatusMap.values().stream().filter(s -> s.equals(PluginStatusEnum.ENABLED.getCodeStr())).count() + "个");
+        msgUtils.text("共" + pluginStatusMap.size() + "个，启用" + pluginStatusMap.values().stream().filter(s -> PluginStatusEnum.ENABLED.getCode().equals(Integer.valueOf(s.toString()))).count() + "个");
         return BotContext.ofData(msgUtils.build(), pluginInfoList);
     }
 
@@ -110,5 +110,21 @@ public class SystemPluginService {
         } else {
             return BotContext.ofMsg(String.format("群【%d】还未添加", groupId));
         }
+    }
+
+    public BotContext<Object> addBlacklist(Long selfId, Long userId) {
+        if (redisTemplateClient.hasHashKey(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY + selfId, userId.toString())) {
+            return BotContext.ofMsg(String.format("用户【%d】已经存在黑名单内", userId));
+        }
+        redisTemplateClient.putHash(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY+ selfId, userId.toString(), selfId);
+        return BotContext.ofMsg(String.format("用户【%d】已被移入黑名单", userId));
+    }
+
+    public BotContext<Object> delBlacklist(Long selfId, Long userId) {
+        if (!redisTemplateClient.hasHashKey(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY + selfId, userId.toString())) {
+            return BotContext.ofMsg(String.format("用户【%d】不存在黑名单内", userId));
+        }
+        redisTemplateClient.deleteHash(XBotRedisConstantKey.X_BOT_BLACKLIST_HASH_KEY + selfId, userId.toString());
+        return BotContext.ofMsg(String.format("用户【%d】已被移出黑名单", userId));
     }
 }
