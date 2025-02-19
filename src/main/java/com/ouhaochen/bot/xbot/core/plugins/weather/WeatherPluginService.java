@@ -5,6 +5,7 @@ import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.core.plugins.weather.po.WeatherInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,8 +63,8 @@ public class WeatherPluginService {
             } else {
                 todayWeather = weatherInfo.getWeather1() + "转" + weatherInfo.getWeather2();
             }
-            String msg = placeArray[1] + String.format("%s，天气：%s，气温：%s(℃)，相对湿度：%s(%%)，气压：%s(hPa)，降水：%s(mm)，刮%s，风速：%s(m/s)（%s）。",
-                    placeArray[2], todayWeather, weatherInfo.getTemperature(), weatherInfo.getHumidity(), weatherInfo.getPressure(), weatherInfo.getPrecipitation(),
+            String msg = String.format("%s%s，天气：%s，气温：%s℃，相对湿度：%s%%，气压：%shPa，降水：%smm，刮%s，风速：%sm/s（%s）。",
+                    StrUtil.trim(placeArray[1]), StrUtil.trim(placeArray[2]), todayWeather, weatherInfo.getTemperature(), weatherInfo.getHumidity(), weatherInfo.getPressure(), weatherInfo.getPrecipitation(),
                     weatherInfo.getWindDirection(), weatherInfo.getWindSpeed(), weatherInfo.getWindScale()
             );
             return BotContext.ofMsg(msg);

@@ -94,7 +94,8 @@ public class OnmyojiPluginService {
             DsResponse<SomeOneFeeds> someOneFeeds = DsApi.getSomeOneFeeds(uid);
             if (someOneFeeds.getCode().equals(HttpStatus.OK.value()) && !someOneFeeds.getResult().getFeeds().isEmpty()) {
                 Feed feed = someOneFeeds.getResult().getFeeds().get(0);
-                if (redisTemplateClient.hasKey(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, uid))) {
+                String feedId = feed.getId();
+                if (redisTemplateClient.hasKey(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, feedId))) {
                     return new BotContext<>(null);
                 } else {
                     BotContext<Feed> botContext = new BotContext<>(feed);
@@ -114,7 +115,7 @@ public class OnmyojiPluginService {
                         }
                     }
                     botContext.setMsg(msgUtil.build());
-                    redisTemplateClient.set(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, uid), feed, 31, TimeUnit.DAYS);
+                    redisTemplateClient.set(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, feedId), feed, 31, TimeUnit.DAYS);
                     return botContext;
                 }
             } else {
