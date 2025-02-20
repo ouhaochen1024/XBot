@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class OnmyojiPluginService {
 
+    // 官方动态获取延迟
     private static final String ONMYOJI_OFFICIAL_FEED_DELAY_KEY = "onmyoji_official_feed_delay:";
     // 群组订阅账号
     private static final String ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY = "onmyoji_group_subscribe_uid:";

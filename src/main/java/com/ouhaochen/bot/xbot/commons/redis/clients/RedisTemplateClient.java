@@ -206,18 +206,16 @@ public class RedisTemplateClient {
     }
 
     public String tryLock(String key, long expireTime, TimeUnit timeUnit) {
-        String lockKey = "REDIS_LOCK:" + key;
         String value = UUID.randomUUID().toString();
-        Boolean result = redisTemplate.opsForValue().setIfAbsent(lockKey, value, expireTime, timeUnit);
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(key, value, expireTime, timeUnit);
         return Boolean.TRUE.equals(result) ? value : null;
     }
 
     public void releaseLock(String key, String value) {
-        String lockKey = "REDIS_LOCK:" + key;
-        Object currentValue = redisTemplate.opsForValue().get(lockKey);
+        Object currentValue = redisTemplate.opsForValue().get(key);
         if (currentValue != null && currentValue.equals(value)) {
             // 校验值正确，删除键并返回删除的数量
-            redisTemplate.delete(lockKey);
+            redisTemplate.delete(key);
         }
     }
 }

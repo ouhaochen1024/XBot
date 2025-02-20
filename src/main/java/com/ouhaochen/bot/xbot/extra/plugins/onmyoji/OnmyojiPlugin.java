@@ -35,6 +35,7 @@ public class OnmyojiPlugin {
     private final BotGroupDao botGroupDao;
     private final RedisTemplateClient redisTemplateClient;
     private final OnmyojiPluginService onmyojiPluginService;
+    private static final String ONMYOJI_GET_FEEDS_LOCK_KEY = "onmyoji_get_feeds_lock:";
 
     @Permission
     @GroupMessageHandler
@@ -87,7 +88,7 @@ public class OnmyojiPlugin {
                     // 查看群组订阅缓存
                     String uidHashKey = OnmyojiPluginService.ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(botId, groupId);
                     if (redisTemplateClient.hasKey(uidHashKey)) {
-                        String lock = redisTemplateClient.tryLock(botId + ":" + groupId, 5, TimeUnit.MINUTES);
+                        String lock = redisTemplateClient.tryLock(ONMYOJI_GET_FEEDS_LOCK_KEY + botId + ":" + groupId, 5, TimeUnit.MINUTES);
                         if (lock == null) {
                             return;
                         }
@@ -97,7 +98,7 @@ public class OnmyojiPlugin {
                             actionUtil.sendGroupResponse(botId, groupId, context);
                             ThreadUtil.sleep(10, TimeUnit.SECONDS);
                         }
-                        redisTemplateClient.releaseLock(botId + ":" + groupId, lock);
+                        redisTemplateClient.releaseLock(ONMYOJI_GET_FEEDS_LOCK_KEY + botId + ":" + groupId, lock);
                         redisTemplateClient.set(OnmyojiPluginService.ONMYOJI_OFFICIAL_FEED_DELAY_KEY(botId, groupId), TrueOrFalseEnum.TRUE.getCode(), 5, TimeUnit.MINUTES);
                     }
                 }

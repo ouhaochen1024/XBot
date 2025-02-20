@@ -1,8 +1,6 @@
 package com.ouhaochen.bot.xbot;
 
-import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.core.plugins.weather.WeatherPluginService;
-import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.OnmyojiPluginService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
