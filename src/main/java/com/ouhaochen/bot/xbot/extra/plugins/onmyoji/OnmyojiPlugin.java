@@ -96,7 +96,7 @@ public class OnmyojiPlugin {
                         for (Map.Entry<Object, Object> entry : uidMap.entrySet()) {
                             BotContext<Feed> context = onmyojiPluginService.getFeedsTask(botId, groupId, (String) entry.getKey());
                             actionUtil.sendGroupResponse(botId, groupId, context);
-                            ThreadUtil.sleep(10, TimeUnit.SECONDS);
+                            ThreadUtil.sleep(2, TimeUnit.SECONDS);
                         }
                         redisTemplateClient.releaseLock(ONMYOJI_GET_FEEDS_LOCK_KEY + botId + ":" + groupId, lock);
                         redisTemplateClient.set(OnmyojiPluginService.ONMYOJI_OFFICIAL_FEED_DELAY_KEY(botId, groupId), TrueOrFalseEnum.TRUE.getCode(), 5, TimeUnit.MINUTES);

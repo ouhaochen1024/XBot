@@ -1,6 +1,7 @@
 package com.ouhaochen.bot.xbot.extra.plugins.onmyoji;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
+import com.ouhaochen.bot.xbot.commons.enums.DateFormatEnum;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.api.DsApi;
@@ -11,9 +12,12 @@ import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.some_one_feeds.SomeOne
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.userinfo.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.date.TimeUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -102,8 +106,11 @@ public class OnmyojiPluginService {
                     BotContext<Feed> botContext = new BotContext<>(feed);
                     feed.setFeedContent();
                     FeedContent feedContent = feed.getFeedContent();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateFormatEnum.NORM_DATETIME_MINUTE.getPattern());
                     MsgUtils msgUtil = MsgUtils.builder()
                             .text(String.format("@%s", someOneFeeds.getResult().getUserInfos().get(0).getUser().getNick()))
+                            //时间戳转日期
+                            .text(" " + TimeUtil.of(feed.getCreateTime(),  ZoneId.of("Asia/Shanghai")).format(formatter))
                             .text("\n")
                             .text(feedContent.getBody().getText());
                     for (FeedContent.Media media : feedContent.getBody().getMedia()) {
