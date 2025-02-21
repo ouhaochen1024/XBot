@@ -48,6 +48,10 @@ public class OnmyojiPluginService {
     private final RedisTemplateClient redisTemplateClient;
 
     public BotContext<Object> subscribe(Long botId, Long groupId, String uid) {
+        //如果是网址则取最后/一串代码
+        if (uid.contains("/")) {
+            uid = uid.substring(uid.lastIndexOf("/") + 1);
+        }
         if (redisTemplateClient.hasHashKey(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(botId, groupId), uid)) {
             return BotContext.ofMsg("本群已订阅该大神账号");
         }
@@ -71,6 +75,10 @@ public class OnmyojiPluginService {
     }
 
     public BotContext<Object> unsubscribe(long selfId, Long groupId, String uid) {
+        //如果是网址则取最后/一串代码
+        if (uid.contains("/")) {
+            uid = uid.substring(uid.lastIndexOf("/") + 1);
+        }
         UserInfo userInfo = (UserInfo) redisTemplateClient.getHashValue(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId), uid);
         if (userInfo != null) {
             redisTemplateClient.deleteHash(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId), uid);
