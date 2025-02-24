@@ -16,7 +16,7 @@ esac
 cd $(dirname $0)/..
 DIR_HOME="${PWD}"
 
-source ${DIR_HOME}/sbin/env.sh
+. ${DIR_HOME}/sbin/env.sh
 
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java
@@ -46,7 +46,7 @@ PID=`ps -ef | grep -i ${RUN_NAME} | grep -i ${DIR_TARGET} | grep java | grep -v 
 
 if [ -z "${PID}" ] ; then
     echo "No ${RUN_NAME} is running."
-    exit -1;
+    exit 1;
 fi
 
 echo "The [pid:${PID}] ${RUN_NAME} is running..."
