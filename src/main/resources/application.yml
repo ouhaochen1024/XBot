@@ -46,6 +46,9 @@ third-party-api:
     get—url: https://api.apihz.cn/getapi.php
     id: 10002545
     key: 52015717136e11390403b9c8dd3aa391
+  aliyun:
+    bailian:
+      api-key: sk-c647f0141421437c902b22052147302c
 
 xbot:
   version: v1.0.0

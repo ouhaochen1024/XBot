@@ -114,7 +114,7 @@ public class OnmyojiPluginService {
                     BotContext<Feed> botContext = new BotContext<>(feed);
                     feed.setFeedContent();
                     FeedContent feedContent = feed.getFeedContent();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateFormatEnum.NORM_DATETIME_MINUTE.getPattern());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateFormatEnum.NORM_DATETIME.getPattern());
                     MsgUtils msgUtil = MsgUtils.builder()
                             .text(String.format("@%s", someOneFeeds.getResult().getUserInfos().get(0).getUser().getNick()))
                             //时间戳转日期
