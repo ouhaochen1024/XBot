@@ -1,6 +1,5 @@
 package com.ouhaochen.bot.xbot.extra.plugins.bailian_llm;
 
-import com.ouhaochen.bot.xbot.core.enums.PluginStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,18 +16,18 @@ public enum ModelTypeEnum {
     private final String code;
     private final String name;
 
-    public static ModelTypeEnum getByName(String name) {
+    public static String getCodeByName(String name) {
         for (ModelTypeEnum modelTypeEnum : ModelTypeEnum.values()) {
             if (modelTypeEnum.getName().equals(name)) {
-                return modelTypeEnum;
+                return modelTypeEnum.getCode();
             }
         }
         return null;
     }
 
-    public static ModelTypeEnum getByCode(String code) {
+    public static ModelTypeEnum getByName(String modelName) {
         for (ModelTypeEnum modelTypeEnum : ModelTypeEnum.values()) {
-            if (modelTypeEnum.getCode().equals(code)) {
+            if (modelTypeEnum.getName().equals(modelName)) {
                 return modelTypeEnum;
             }
         }

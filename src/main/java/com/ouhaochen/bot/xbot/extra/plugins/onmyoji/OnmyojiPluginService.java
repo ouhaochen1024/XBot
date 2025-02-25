@@ -121,13 +121,15 @@ public class OnmyojiPluginService {
                             .text(" " + TimeUtil.of(feed.getCreateTime(),  ZoneId.of("Asia/Shanghai")).format(formatter))
                             .text("\n")
                             .text(feedContent.getBody().getText());
-                    for (FeedContent.Media media : feedContent.getBody().getMedia()) {
-                        if (media.getMimeType().contains("image")) {
-                            msgUtil.img(media.getUrl());
-                        }
-                        if (media.getMimeType().contains("video")) {
-                            botContext.setVideo(media.getUrl());
-                            botContext.setCover(media.getCover());
+                    if (feedContent.getBody().getMedia() != null) {
+                        for (FeedContent.Media media : feedContent.getBody().getMedia()) {
+                            if (media.getMimeType().contains("image")) {
+                                msgUtil.img(media.getUrl());
+                            }
+                            if (media.getMimeType().contains("video")) {
+                                botContext.setVideo(media.getUrl());
+                                botContext.setCover(media.getCover());
+                            }
                         }
                     }
                     botContext.setMsg(msgUtil.build());

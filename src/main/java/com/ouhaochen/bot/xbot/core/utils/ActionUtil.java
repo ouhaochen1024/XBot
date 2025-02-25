@@ -1,7 +1,6 @@
 package com.ouhaochen.bot.xbot.core.utils;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
-import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.core.BotContainer;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
@@ -11,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-
 @Component
 @RequiredArgsConstructor
 public final class ActionUtil {
@@ -22,6 +18,13 @@ public final class ActionUtil {
 
     public static void sendResponse(Bot bot, AnyMessageEvent event, BotContext<?> context) {
         if (context == null || StrUtil.isBlank(context.getMsg())) return;
+        if (event.getGroupId() != null && context.getAtFlag() && context.getAtId() != null) {
+            String msg = MsgUtils.builder().at(context.getAtId())
+                    .text("\n")
+                    .text(context.getMsg())
+                    .build();
+            context.setMsg(msg);
+        }
         bot.sendMsg(event, context.getMsg(), context.getAutoEscape());
         if (context.getVideo() != null) {
             String video = MsgUtils.builder().video(context.getVideo(), context.getCover()).build();
@@ -31,6 +34,13 @@ public final class ActionUtil {
 
     public static void sendResponse(Bot bot, GroupMessageEvent event, BotContext<?> context) {
         if (context == null || StrUtil.isBlank(context.getMsg())) return;
+        if (context.getAtFlag() && context.getAtId() != null) {
+            String msg = MsgUtils.builder().at(context.getAtId())
+                    .text("\n")
+                    .text(context.getMsg())
+                    .build();
+            context.setMsg(msg);
+        }
         bot.sendGroupMsg(event.getGroupId(), context.getMsg(), context.getAutoEscape());
         if (context.getVideo() != null) {
             String video = MsgUtils.builder().video(context.getVideo(), context.getCover()).build();

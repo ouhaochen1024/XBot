@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -194,7 +195,7 @@ public class RedisTemplateClient {
         }
     }
 
-    public void putSet(final String key, Object... value) {
+    public void setAdd(final String key, Object... value) {
         if (key == null || key.isEmpty()) {
             return;
         }
@@ -204,6 +205,29 @@ public class RedisTemplateClient {
             throw new RuntimeException("操作缓存失败", e);
         }
     }
+
+    public void listPush(final String key, Object... value) {
+        if (key == null || key.isEmpty()) {
+            return;
+        }
+        try {
+            redisTemplate.opsForList().leftPush(key, value);
+        } catch (Exception e) {
+            throw new RuntimeException("操作缓存失败", e);
+        }
+    }
+
+    public List<Object> getList(final String key) {
+        if (key == null || key.isEmpty()) {
+            return null;
+        }
+        try {
+            return redisTemplate.opsForList().range(key, 0, -1);
+        } catch (Exception e) {
+            throw new RuntimeException("操作缓存失败", e);
+        }
+    }
+
 
     public String tryLock(String key, long expireTime, TimeUnit timeUnit) {
         String value = UUID.randomUUID().toString();
