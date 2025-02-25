@@ -6,6 +6,7 @@ import com.alibaba.dashscope.aigc.generation.GenerationResult;
 import com.alibaba.dashscope.common.Message;
 import com.alibaba.dashscope.common.Role;
 import com.alibaba.fastjson2.JSON;
+import com.mikuac.shiro.common.utils.MsgUtils;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
 import lombok.RequiredArgsConstructor;
@@ -50,13 +51,21 @@ public class BaiLianPluginService {
         return BotContext.ofData(String.format("当前模型为【%s】", currentModel), currentModel);
     }
 
+    public BotContext<Object> viewModels() {
+        String mgs = MsgUtils.builder()
+                .text("支持的模型：\n")
+                .text(ModelTypeEnum.getAllNames().stream().map(item -> "【" + item + "】").collect(Collectors.joining("\n")))
+                .build();
+        return BotContext.ofMsg(mgs);
+    }
+
     public BotContext<Object> setModel(Long botId, String modelName) {
         ModelTypeEnum modelType = ModelTypeEnum.getByName(modelName);
         if (modelType == null) {
             return BotContext.ofMsg("不支持的模型");
         }
         redisTemplateClient.set(BAILIAN_LLM_CURRENT_MODEL_KEY + botId, modelType.getName());
-        return BotContext.ofMsg(String.format("设置模型为【%s】", modelType.getName()));
+        return BotContext.ofMsg(String.format("操作成功，当前模型为【%s】", modelType.getName()));
     }
 
     public BotContext<Message> chat(Long botId, Long userId, String keyword) {
@@ -111,6 +120,8 @@ public class BaiLianPluginService {
 
     public BotContext<Object> clearChatHistory(Long botId, Long userId) {
         redisTemplateClient.delete(BAILIAN_CHAT_HISTORY_KEY(botId, userId));
+        redisTemplateClient.delete(BAILIAN_LLM_LOCK_KEY(botId, userId));
         return BotContext.ofMsg("已开启新对话");
     }
+
 }

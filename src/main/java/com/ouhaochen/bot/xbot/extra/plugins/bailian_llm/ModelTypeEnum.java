@@ -3,6 +3,9 @@ package com.ouhaochen.bot.xbot.extra.plugins.bailian_llm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public enum ModelTypeEnum {
@@ -32,5 +35,13 @@ public enum ModelTypeEnum {
             }
         }
         return null;
+    }
+
+    public static List<String> getAllNames() {
+        List<String> names = new ArrayList<>();
+        for (ModelTypeEnum modelTypeEnum : ModelTypeEnum.values()) {
+            names.add(modelTypeEnum.getName());
+        }
+        return names;
     }
 }

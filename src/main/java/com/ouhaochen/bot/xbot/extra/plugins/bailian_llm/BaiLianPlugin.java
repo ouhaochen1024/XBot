@@ -33,7 +33,16 @@ public class BaiLianPlugin {
 
     @Permission
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^设置模型\\s(.*)?$")
+    @MessageHandlerFilter(cmd = "查看所有模型|模型列表")
+    public void viewModels(Bot bot, AnyMessageEvent event) {
+        BotContext<Object> context = baiLianPluginService.viewModels();
+        ActionUtil.sendResponse(bot, event, context);
+    }
+
+
+    @Permission
+    @AnyMessageHandler
+    @MessageHandlerFilter(cmd = "^(?:切换模型|设置模型)\\s(.*)?$")
     public void setModel(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
         if(keyword == null) return;
