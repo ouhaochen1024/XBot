@@ -18,6 +18,13 @@ public final class ActionUtil {
 
     public static void sendResponse(Bot bot, AnyMessageEvent event, BotContext<?> context) {
         if (context == null || StrUtil.isBlank(context.getMsg())) return;
+        if (event.getGroupId() != null && context.getAtFlag() && context.getAtId() != null) {
+            String msg = MsgUtils.builder().at(context.getAtId())
+                    .text("\n")
+                    .text(context.getMsg())
+                    .build();
+            context.setMsg(msg);
+        }
         bot.sendMsg(event, context.getMsg(), context.getAutoEscape());
         if (context.getVideo() != null) {
             String video = MsgUtils.builder().video(context.getVideo(), context.getCover()).build();
@@ -27,6 +34,13 @@ public final class ActionUtil {
 
     public static void sendResponse(Bot bot, GroupMessageEvent event, BotContext<?> context) {
         if (context == null || StrUtil.isBlank(context.getMsg())) return;
+        if (context.getAtFlag() && context.getAtId() != null) {
+            String msg = MsgUtils.builder().at(context.getAtId())
+                    .text("\n")
+                    .text(context.getMsg())
+                    .build();
+            context.setMsg(msg);
+        }
         bot.sendGroupMsg(event.getGroupId(), context.getMsg(), context.getAutoEscape());
         if (context.getVideo() != null) {
             String video = MsgUtils.builder().video(context.getVideo(), context.getCover()).build();

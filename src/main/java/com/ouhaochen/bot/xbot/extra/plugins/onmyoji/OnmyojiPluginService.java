@@ -1,6 +1,7 @@
 package com.ouhaochen.bot.xbot.extra.plugins.onmyoji;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
+import com.ouhaochen.bot.xbot.commons.enums.DateFormatEnum;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.api.DsApi;
@@ -11,9 +12,12 @@ import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.some_one_feeds.SomeOne
 import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.userinfo.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.date.TimeUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class OnmyojiPluginService {
 
+    // 官方动态获取延迟
     private static final String ONMYOJI_OFFICIAL_FEED_DELAY_KEY = "onmyoji_official_feed_delay:";
     // 群组订阅账号
     private static final String ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY = "onmyoji_group_subscribe_uid:";
@@ -43,6 +48,10 @@ public class OnmyojiPluginService {
     private final RedisTemplateClient redisTemplateClient;
 
     public BotContext<Object> subscribe(Long botId, Long groupId, String uid) {
+        //如果是网址则取最后/一串代码
+        if (uid.contains("/")) {
+            uid = uid.substring(uid.lastIndexOf("/") + 1);
+        }
         if (redisTemplateClient.hasHashKey(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(botId, groupId), uid)) {
             return BotContext.ofMsg("本群已订阅该大神账号");
         }
@@ -66,6 +75,10 @@ public class OnmyojiPluginService {
     }
 
     public BotContext<Object> unsubscribe(long selfId, Long groupId, String uid) {
+        //如果是网址则取最后/一串代码
+        if (uid.contains("/")) {
+            uid = uid.substring(uid.lastIndexOf("/") + 1);
+        }
         UserInfo userInfo = (UserInfo) redisTemplateClient.getHashValue(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId), uid);
         if (userInfo != null) {
             redisTemplateClient.deleteHash(ONMYOJI_GROUP_SUBSCRIBE_UID_HASH_KEY(selfId, groupId), uid);
@@ -83,7 +96,7 @@ public class OnmyojiPluginService {
             StringBuilder msg = new StringBuilder();
             for (Map.Entry<Object, Object> entry : subscribeMap.entrySet()) {
                 UserInfo userInfo = (UserInfo) entry.getValue();
-                msg.append(String.format("【%s】\nuid：%s\n", userInfo.getUser().getNick(), userInfo.getUser().getUid()));
+                msg.append(String.format("【%s】%s\n", userInfo.getUser().getNick(), userInfo.getUser().getUid()));
             }
             return BotContext.ofMsg(msg.toString());
         }
@@ -94,27 +107,33 @@ public class OnmyojiPluginService {
             DsResponse<SomeOneFeeds> someOneFeeds = DsApi.getSomeOneFeeds(uid);
             if (someOneFeeds.getCode().equals(HttpStatus.OK.value()) && !someOneFeeds.getResult().getFeeds().isEmpty()) {
                 Feed feed = someOneFeeds.getResult().getFeeds().get(0);
-                if (redisTemplateClient.hasKey(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, uid))) {
+                String feedId = feed.getId();
+                if (redisTemplateClient.hasKey(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, feedId))) {
                     return new BotContext<>(null);
                 } else {
                     BotContext<Feed> botContext = new BotContext<>(feed);
                     feed.setFeedContent();
                     FeedContent feedContent = feed.getFeedContent();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateFormatEnum.NORM_DATETIME.getPattern());
                     MsgUtils msgUtil = MsgUtils.builder()
                             .text(String.format("@%s", someOneFeeds.getResult().getUserInfos().get(0).getUser().getNick()))
                             .text("\n")
+                            .text(" " + TimeUtil.of(feed.getCreateTime(),  ZoneId.of("Asia/Shanghai")).format(formatter))
+                            .text("\n")
                             .text(feedContent.getBody().getText());
-                    for (FeedContent.Media media : feedContent.getBody().getMedia()) {
-                        if (media.getMimeType().contains("image")) {
-                            msgUtil.img(media.getUrl());
-                        }
-                        if (media.getMimeType().contains("video")) {
-                            botContext.setVideo(media.getUrl());
-                            botContext.setCover(media.getCover());
+                    if (feedContent.getBody().getMedia() != null) {
+                        for (FeedContent.Media media : feedContent.getBody().getMedia()) {
+                            if (media.getMimeType().contains("image")) {
+                                msgUtil.img(media.getUrl());
+                            }
+                            if (media.getMimeType().contains("video")) {
+                                botContext.setVideo(media.getUrl());
+                                botContext.setCover(media.getCover());
+                            }
                         }
                     }
                     botContext.setMsg(msgUtil.build());
-                    redisTemplateClient.set(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, uid), feed, 31, TimeUnit.DAYS);
+                    redisTemplateClient.set(ONMYOJI_GROUP_LAST_FEEDS_SENT_ID_KEY(botId, groupId, feedId), feed, 31, TimeUnit.DAYS);
                     return botContext;
                 }
             } else {

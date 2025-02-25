@@ -13,6 +13,8 @@ public class BotContext<T> {
     private Boolean approve = Boolean.FALSE;
     private String approveReason = "";
     private Boolean autoEscape = Boolean.FALSE;
+    private Boolean atFlag = Boolean.FALSE;
+    private Long atId;
     private T data;
 
     public BotContext(String msg) {

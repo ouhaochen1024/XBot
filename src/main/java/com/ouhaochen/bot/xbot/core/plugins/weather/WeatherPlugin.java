@@ -24,9 +24,9 @@ public class WeatherPlugin {
     @AnyMessageHandler
     @MessageHandlerFilter(cmd = "^天气\\s(.*)?$")
     public void weather(Bot bot, AnyMessageEvent event, Matcher matcher) {
-        String cityName = MatcherUtil.getNormal(bot, event, matcher);
-        if (null == cityName) return;
-        BotContext<Object> context = weatherPluginService.weather(cityName);
+        String location = MatcherUtil.getNormal(bot, event, matcher);
+        if (null == location) return;
+        BotContext<Object> context = weatherPluginService.weather(location);
         ActionUtil.sendResponse(bot, event, context);
     }
 
