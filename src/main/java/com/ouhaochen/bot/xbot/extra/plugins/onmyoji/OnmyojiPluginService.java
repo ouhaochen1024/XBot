@@ -117,7 +117,7 @@ public class OnmyojiPluginService {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateFormatEnum.NORM_DATETIME.getPattern());
                     MsgUtils msgUtil = MsgUtils.builder()
                             .text(String.format("@%s", someOneFeeds.getResult().getUserInfos().get(0).getUser().getNick()))
-                            //时间戳转日期
+                            .text("\n")
                             .text(" " + TimeUtil.of(feed.getCreateTime(),  ZoneId.of("Asia/Shanghai")).format(formatter))
                             .text("\n")
                             .text(feedContent.getBody().getText());
