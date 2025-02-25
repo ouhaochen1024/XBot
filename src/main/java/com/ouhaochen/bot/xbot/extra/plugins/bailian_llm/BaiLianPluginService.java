@@ -5,7 +5,6 @@ import com.alibaba.dashscope.aigc.generation.GenerationParam;
 import com.alibaba.dashscope.aigc.generation.GenerationResult;
 import com.alibaba.dashscope.common.Message;
 import com.alibaba.dashscope.common.Role;
-import com.alibaba.fastjson2.JSON;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
@@ -82,7 +81,7 @@ public class BaiLianPluginService {
             List<Object> chatHistory = redisTemplateClient.getList(BAILIAN_CHAT_HISTORY_KEY(botId, userId));
             List<Message> messages = new ArrayList<>();
             if (CollUtil.isNotEmpty(chatHistory)) {
-                messages = chatHistory.stream().map(item -> JSON.parseObject(item.toString(), Message.class)).collect(Collectors.toList());
+                messages = chatHistory.stream().map(item -> (Message) item).collect(Collectors.toList());
             }
             messages.add(Message.builder().role(Role.USER.getValue()).content(keyword).build());
             Generation gen = new Generation();
@@ -97,7 +96,7 @@ public class BaiLianPluginService {
                 return BotContext.ofMsg("百炼大模型服务异常，请稍后重试");
             }
             Message message = result.getOutput().getChoices().get(0).getMessage();
-            redisTemplateClient.listPush(BAILIAN_CHAT_HISTORY_KEY(botId, userId), JSON.toJSONString(message));
+            redisTemplateClient.listPush(BAILIAN_CHAT_HISTORY_KEY(botId, userId), message);
             BotContext<Message> context;
             if (StrUtil.isNotBlank(message.getReasoningContent())) {
                 context = BotContext.ofData("思考：\n" + message.getReasoningContent() + "\n总结：\n" + message.getContent(), message);

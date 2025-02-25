@@ -206,7 +206,7 @@ public class RedisTemplateClient {
         }
     }
 
-    public void listPush(final String key, Object... value) {
+    public void listPush(final String key, Object value) {
         if (key == null || key.isEmpty()) {
             return;
         }
