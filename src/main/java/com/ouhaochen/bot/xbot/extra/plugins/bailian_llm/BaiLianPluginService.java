@@ -135,10 +135,10 @@ public class BaiLianPluginService {
     private static void handleGenerationResult(StringBuilder reasoningContent, StringBuilder finalContent, GenerationResult message) {
         String reasoning = message.getOutput().getChoices().get(0).getMessage().getReasoningContent();
         String content = message.getOutput().getChoices().get(0).getMessage().getContent();
-        if (!reasoning.isEmpty()) {
+        if (StrUtil.isNotBlank(reasoning)) {
             reasoningContent.append(reasoning);
         }
-        if (!content.isEmpty()) {
+        if (StrUtil.isNotBlank(content)) {
             finalContent.append(content);
         }
     }
