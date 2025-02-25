@@ -5,9 +5,13 @@ import com.alibaba.dashscope.aigc.generation.GenerationParam;
 import com.alibaba.dashscope.aigc.generation.GenerationResult;
 import com.alibaba.dashscope.common.Message;
 import com.alibaba.dashscope.common.Role;
+import com.alibaba.dashscope.exception.ApiException;
+import com.alibaba.dashscope.exception.InputRequiredException;
+import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.ouhaochen.bot.xbot.commons.redis.clients.RedisTemplateClient;
 import com.ouhaochen.bot.xbot.core.context.BotContext;
+import io.reactivex.Flowable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -68,9 +72,9 @@ public class BaiLianPluginService {
     }
 
     public BotContext<Message> chat(Long botId, Long userId, String keyword) {
-        String lock = redisTemplateClient.tryLock(BAILIAN_LLM_LOCK_KEY(botId, userId), 5, TimeUnit.MINUTES);
+        String lock = redisTemplateClient.tryLock(BAILIAN_LLM_LOCK_KEY(botId, userId), 10, TimeUnit.MINUTES);
         if (lock == null) {
-            return BotContext.ofMsg("你的问题，模型还在思考中，请等待一会~");
+            return BotContext.ofMsg("你的问题，模型还在思考中，再等等吧~");
         }
         String currentModel = (String) currentModel(botId).getData();
         String currentModelCode = ModelTypeEnum.getCodeByName(currentModel);
@@ -84,31 +88,26 @@ public class BaiLianPluginService {
                 messages = chatHistory.stream().map(item -> (Message) item).collect(Collectors.toList());
             }
             messages.add(Message.builder().role(Role.USER.getValue()).content(keyword).build());
-            Generation gen = new Generation();
-            GenerationParam param = GenerationParam.builder()
-                    .apiKey(baiLianApiKey)
-                    .model(currentModelCode)
-                    .messages(messages)
-                    .resultFormat(GenerationParam.ResultFormat.MESSAGE)
-                    .build();
-            GenerationResult result = gen.call(param);
-            if (result.getOutput() == null || CollUtil.isEmpty(result.getOutput().getChoices())) {
+
+            Message result = new Message();
+            result.setRole(Role.ASSISTANT.getValue());
+            streamCallWithMessage(baiLianApiKey, currentModelCode, messages,result);
+
+            if (StrUtil.isBlank(result.getReasoningContent()) || StrUtil.isBlank(result.getContent())) {
                 return BotContext.ofMsg("百炼大模型服务异常，请稍后重试");
             }
-            Message message = result.getOutput().getChoices().get(0).getMessage();
-            redisTemplateClient.listPush(BAILIAN_CHAT_HISTORY_KEY(botId, userId), message);
+
+            redisTemplateClient.listPush(BAILIAN_CHAT_HISTORY_KEY(botId, userId), result);
+            redisTemplateClient.expire(BAILIAN_CHAT_HISTORY_KEY(botId, userId), 1, TimeUnit.HOURS);
             BotContext<Message> context;
-            if (StrUtil.isNotBlank(message.getReasoningContent())) {
-                context = BotContext.ofData("思考：\n" + message.getReasoningContent() + "\n总结：\n" + message.getContent(), message);
-                context.setAtFlag(Boolean.TRUE);
-                context.setAtId(userId);
-                return context;
+            if (StrUtil.isNotBlank(result.getReasoningContent())) {
+                context = BotContext.ofData("=========思考过程=========\n" + result.getReasoningContent() + "\n=========完整回复=========\n" + result.getContent(), result);
             } else {
-                context = BotContext.ofData(message.getContent(), message);
-                context.setAtFlag(Boolean.TRUE);
-                context.setAtId(userId);
-                return context;
+                context = BotContext.ofData(result.getContent(), result);
             }
+            context.setAtFlag(Boolean.TRUE);
+            context.setAtId(userId);
+            return context;
         } catch (Exception e) {
             log.error("百炼大模型服务异常，请稍后重试", e);
             return BotContext.ofMsg("百炼大模型服务异常，请稍后重试");
@@ -121,6 +120,39 @@ public class BaiLianPluginService {
         redisTemplateClient.delete(BAILIAN_CHAT_HISTORY_KEY(botId, userId));
         redisTemplateClient.delete(BAILIAN_LLM_LOCK_KEY(botId, userId));
         return BotContext.ofMsg("已开启新对话");
+    }
+
+    private static GenerationParam buildGenerationParam(String baiLianApiKey, String modelCode, List<Message> msg) {
+        return GenerationParam.builder()
+                .apiKey(baiLianApiKey)
+                .model(modelCode)
+                .messages(msg)
+                .resultFormat(GenerationParam.ResultFormat.MESSAGE)
+                .incrementalOutput(true)
+                .build();
+    }
+
+    private static void handleGenerationResult(StringBuilder reasoningContent, StringBuilder finalContent, GenerationResult message) {
+        String reasoning = message.getOutput().getChoices().get(0).getMessage().getReasoningContent();
+        String content = message.getOutput().getChoices().get(0).getMessage().getContent();
+        if (!reasoning.isEmpty()) {
+            reasoningContent.append(reasoning);
+        }
+        if (!content.isEmpty()) {
+            finalContent.append(content);
+        }
+    }
+
+    public static void streamCallWithMessage(String baiLianApiKey, String modelCode, List<Message> msg, Message result)
+            throws NoApiKeyException, ApiException, InputRequiredException {
+        GenerationParam param = buildGenerationParam(baiLianApiKey, modelCode, msg);
+        Generation gen = new Generation();
+        Flowable<GenerationResult> flowable = gen.streamCall(param);
+        StringBuilder reasoningContent = new StringBuilder();
+        StringBuilder finalContent = new StringBuilder();
+        flowable.blockingForEach(message -> handleGenerationResult(reasoningContent, finalContent, message));
+        result.setReasoningContent(reasoningContent.toString());
+        result.setContent(finalContent.toString());
     }
 
 }
