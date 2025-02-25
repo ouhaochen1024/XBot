@@ -93,8 +93,8 @@ public class BaiLianPluginService {
             result.setRole(Role.ASSISTANT.getValue());
             streamCallWithMessage(baiLianApiKey, currentModelCode, messages,result);
 
-            if (StrUtil.isBlank(result.getReasoningContent()) || StrUtil.isBlank(result.getContent())) {
-                return BotContext.ofMsg("百炼大模型服务异常，请稍后重试");
+            if (StrUtil.isBlank(result.getReasoningContent()) && StrUtil.isBlank(result.getContent())) {
+                return BotContext.ofMsg("大模型没有回答，请稍后重试");
             }
 
             redisTemplateClient.listPush(BAILIAN_CHAT_HISTORY_KEY(botId, userId), result);
