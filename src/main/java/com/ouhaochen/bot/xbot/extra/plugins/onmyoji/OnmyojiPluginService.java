@@ -13,6 +13,7 @@ import com.ouhaochen.bot.xbot.extra.plugins.onmyoji.ds.po.userinfo.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.date.TimeUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class OnmyojiPluginService {
 
+    // 最大长文长度
+    private static final int MAX_LONG_TEXT_LENGTH = 4000;
+    // 文章链接
+    private static final String ARTICLE_URL_TEMPLATE = "https://ds.163.com/article/%s/";
     // 官方动态获取延迟
     private static final String ONMYOJI_OFFICIAL_FEED_DELAY_KEY = "onmyoji_official_feed_delay:";
     // 群组订阅账号
@@ -118,9 +123,18 @@ public class OnmyojiPluginService {
                     MsgUtils msgUtil = MsgUtils.builder()
                             .text(String.format("@%s", someOneFeeds.getResult().getUserInfos().get(0).getUser().getNick()))
                             .text("\n")
-                            .text(" " + TimeUtil.of(feed.getCreateTime(),  ZoneId.of("Asia/Shanghai")).format(formatter))
+                            .text(" " + TimeUtil.of(feed.getCreateTime(),  ZoneId.of("GMT+8")).format(formatter))
                             .text("\n")
                             .text(feedContent.getBody().getText());
+                    if (StrUtil.isNotBlank(feedContent.getBody().getLongText())) {
+                        if (StrUtil.isNotBlank(feedContent.getBody().getTitle())) {
+                            msgUtil.text("\n").text(String.format("文章标题： %s", feedContent.getBody().getTitle()));
+                        }
+                        String longText = feedContent.getBody().getLongText();
+                        String articleUrl = String.format(ARTICLE_URL_TEMPLATE, feed.getId());
+                        String displayContent = longText.length() > MAX_LONG_TEXT_LENGTH ? "文章过长无法展示，详情请点击---> " + articleUrl : longText;
+                        msgUtil.text("\n").text(String.format("文章内容： %s", displayContent));
+                    }
                     if (feedContent.getBody().getMedia() != null) {
                         for (FeedContent.Media media : feedContent.getBody().getMedia()) {
                             if (media.getMimeType().contains("image")) {

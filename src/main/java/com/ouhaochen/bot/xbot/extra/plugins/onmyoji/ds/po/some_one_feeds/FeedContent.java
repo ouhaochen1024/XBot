@@ -12,9 +12,13 @@ public class FeedContent {
     public static class Body {
         private String text;
         private List<Media> media;
+        private String subTitle;
+        private String title;
+        private String longText;
     }
     @Data
     public static class Media {
+        private String name;
         private String url;
         private String mimeType;
         private Integer size;
