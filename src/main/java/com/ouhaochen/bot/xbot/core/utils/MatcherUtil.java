@@ -8,6 +8,7 @@ import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.http.html.HtmlUtil;
 
 import java.util.regex.Matcher;
 
@@ -53,7 +54,7 @@ public final class MatcherUtil {
                 bot.sendMsg(event, WRONG_MSG, false);
                 return null;
             }
-            return str;
+            return HtmlUtil.unescape(str);
         } catch (Exception e) {
             bot.sendMsg(event, WRONG_MSG, false);
             return null;

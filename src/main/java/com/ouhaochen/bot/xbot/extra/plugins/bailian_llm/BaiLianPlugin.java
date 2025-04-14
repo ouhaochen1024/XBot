@@ -42,7 +42,7 @@ public class BaiLianPlugin {
 
     @Permission
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^(?:切换模型|设置模型)\\s(.*)?$")
+    @MessageHandlerFilter(cmd = "^(?:切换模型|模型切换)\\s(.*)?$")
     public void setModel(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
         if(keyword == null) return;
@@ -52,7 +52,7 @@ public class BaiLianPlugin {
 
     @Permission(checkUser = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^(?:.|。)\\s+(.*)$")
+    @MessageHandlerFilter(cmd = "(?s)^(?:\\.|。)\\s+(.*)")
     public void chat(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
         if (keyword == null) return;

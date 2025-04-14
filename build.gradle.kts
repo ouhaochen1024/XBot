@@ -66,7 +66,7 @@ dependencies {
     implementation("org.dromara.hutool:hutool-all:6.0.0-M19")
     //额外需要的依赖
     //qq-bot-shiro
-    implementation("com.mikuac:shiro:2.3.5")
+    implementation("com.mikuac:shiro:2.3.9")
     //fastjson2
     implementation("com.alibaba.fastjson2:fastjson2:2.0.54")
     //dashscope
