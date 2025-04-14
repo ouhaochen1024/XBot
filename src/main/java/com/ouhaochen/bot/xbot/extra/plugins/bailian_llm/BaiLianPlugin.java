@@ -52,7 +52,7 @@ public class BaiLianPlugin {
 
     @Permission(checkUser = false)
     @AnyMessageHandler
-    @MessageHandlerFilter(cmd = "^(?:\\.|。)\\s+(.*)$")
+    @MessageHandlerFilter(cmd = "(?s)^(?:\\.|。)\\s+(.*)")
     public void chat(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String keyword = MatcherUtil.getNormal(bot, event, matcher);
         if (keyword == null) return;
